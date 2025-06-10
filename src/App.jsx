@@ -5,14 +5,30 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-
+  var obj, bar = { foo: 11 }
+  obj = ['d']
+  if (count) {
+    //
+  } else {
+    //
+  }
+  var x = 'world'
+  x = () => {
+    //
+  }
+  x = () => {
+  }
+  [1, 2, 3].forEach()
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
+        <a href="https://vitejs.dev" rel="noreferrer" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <p>{obj}</p>
+        <p>{x}</p>
+        <p>{bar}</p>
+        <a href="https://react.dev" rel="noreferrer" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
