@@ -23,6 +23,13 @@ module.exports = {
     'react/prop-types': 0,
     'react/display-name': 0,
 
+    // Restricted imports
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: ['@mui/*/*/*']
+      }
+    ],
 
     //Common
     'no-console': 1,
@@ -42,13 +49,6 @@ module.exports = {
     'keyword-spacing': 1,
     'comma-dangle': 1,
     'comma-spacing': 1,
-    'arrow-spacing': 1,
-    // Restricted imports
-    'no-restricted-imports': [
-      'error',
-      {
-        'patterns': ['^@mui/[^/]+$']
-      }
-    ]
+    'arrow-spacing': 1
   }
 }
