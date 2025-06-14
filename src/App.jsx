@@ -7,10 +7,79 @@ import SendIcon from '@mui/icons-material/Send'
 import { pink } from '@mui/material/colors'
 import Typography from '@mui/material/Typography'
 import { useColorScheme } from '@mui/material'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import FormControl from '@mui/material/FormControl'
+import Select from '@mui/material/Select'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
+import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
+import Box from '@mui/material/Box'
 
+function ModeSelect() {
+  // useState là một hook được cung cấp bởi React để quản lý trạng thái (state) bên trong functional component.
+  // là ban đầu age = "" sau khi input có sự thay đổi thì gọi lại hàm setAge
+  // Khi setName(...) được gọi,Component sẽ re-render (vẽ lại) với giá trị name mới
+  // const [age, setAge] = React.useState('');
+
+  const { mode, setMode } = useColorScheme()
+  const handleChange = (event) => {
+    // setAge(event.target.value)
+    const selectedMode=event.target.value
+    setMode(selectedMode)
+  }
+
+  return (
+    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+      <InputLabel id="lable-select-dark-light-mode">Mode</InputLabel>
+      <Select
+        labelId="lable-select-dark-light-mode"
+        id="select-dark-light-mode"
+        value={mode}
+        label="mode"
+        onChange={handleChange}
+      >
+        {/* <MenuItem value="">
+          <em>None</em>
+        </MenuItem>
+        https://v5.mui.com/material-ui/api/icon/
+        */}
+        <MenuItem value="light">
+          <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
+            <LightModeIcon fontSize='small' /> Light
+          </div>
+        </MenuItem>
+        <MenuItem value="dark">
+          { /* sử dụng box giống như sử dụng div thuần ở trên trong material bổ sung thêm box
+          có một số lợi ích,tính năng
+          gap 1 vẫn 8px sẽ nói ở vid sau */ }
+          <Box
+            sx={{ display:'flex', alignItems:'center', gap:1 }}
+          >
+            <DarkModeOutlinedIcon fontSize='small '/> Dark
+          </Box>
+        </MenuItem>
+        <MenuItem value="system">
+          <Box
+            sx={{ display:'flex', alignItems:'center', gap:2 }}
+          >
+            <SettingsBrightnessIcon fontSize='small '/> System
+          </Box>
+        </MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
 function ModeToggle() {
+  // Cài đặt > Hình thức
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  // const prefersLightMode = useMediaQuery('(prefers-color-scheme: light)')
+  // console.log('prefersDarkMode', prefersDarkMode)
+  // console.log(prefersLightMode)
+
   // useColorScheme() chỉ chạy lại khi component render lại
-  // useColorScheme() vừa là dùng để lưu trên localStorage và đổi màu giao diện
+  // useColorScheme() vừa là dùng để lưu trên localStorage và đổi màu giao diện,lấy màu sắc (light / dark / system) của theme.
   const { mode, setMode } = useColorScheme()
   return (
     <Button
@@ -30,6 +99,8 @@ function ModeToggle() {
 function App() {
   return (
     <>
+      <ModeSelect />
+      <hr />
       <ModeToggle />
       <div>Contained</div>
       <Typography variant='body2' color="text.secondary">Test Typography</Typography>
