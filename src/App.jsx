@@ -7,7 +7,7 @@ import SendIcon from '@mui/icons-material/Send'
 import { pink } from '@mui/material/colors'
 import Typography from '@mui/material/Typography'
 import { useColorScheme } from '@mui/material'
-import useMediaQuery from '@mui/material/useMediaQuery'
+// import useMediaQuery from '@mui/material/useMediaQuery'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -62,7 +62,7 @@ function ModeSelect() {
         </MenuItem>
         <MenuItem value="system">
           <Box
-            sx={{ display:'flex', alignItems:'center', gap:2 }}
+            sx={{ display:'flex', alignItems:'center', gap:1 }}
           >
             <SettingsBrightnessIcon fontSize='small '/> System
           </Box>
