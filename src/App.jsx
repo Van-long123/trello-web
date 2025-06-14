@@ -1,13 +1,6 @@
-import Button from '@mui/material/Button'
-import AccessAlarmIcon from '@mui/icons-material/AccessAlarm'
-import ThreeDRotation from '@mui/icons-material/ThreeDRotation'
-import HomeIcon from '@mui/icons-material/Home'
-import DeleteIcon from '@mui/icons-material/Delete'
-import SendIcon from '@mui/icons-material/Send'
-import { pink } from '@mui/material/colors'
-import Typography from '@mui/material/Typography'
 import { useColorScheme } from '@mui/material'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import Container from '@mui/material/Container'
+// import useMediaQuery from '@mui/material/useMediaQuery'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
@@ -18,11 +11,6 @@ import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
 import Box from '@mui/material/Box'
 
 function ModeSelect() {
-  // useState là một hook được cung cấp bởi React để quản lý trạng thái (state) bên trong functional component.
-  // là ban đầu age = "" sau khi input có sự thay đổi thì gọi lại hàm setAge
-  // Khi setName(...) được gọi,Component sẽ re-render (vẽ lại) với giá trị name mới
-  // const [age, setAge] = React.useState('');
-
   const { mode, setMode } = useColorScheme()
   const handleChange = (event) => {
     // setAge(event.target.value)
@@ -40,20 +28,12 @@ function ModeSelect() {
         label="mode"
         onChange={handleChange}
       >
-        {/* <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-        https://v5.mui.com/material-ui/api/icon/
-        */}
         <MenuItem value="light">
           <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
             <LightModeIcon fontSize='small' /> Light
           </div>
         </MenuItem>
         <MenuItem value="dark">
-          { /* sử dụng box giống như sử dụng div thuần ở trên trong material bổ sung thêm box
-          có một số lợi ích,tính năng
-          gap 1 vẫn 8px sẽ nói ở vid sau */ }
           <Box
             sx={{ display:'flex', alignItems:'center', gap:1 }}
           >
@@ -62,7 +42,7 @@ function ModeSelect() {
         </MenuItem>
         <MenuItem value="system">
           <Box
-            sx={{ display:'flex', alignItems:'center', gap:2 }}
+            sx={{ display:'flex', alignItems:'center', gap:1 }}
           >
             <SettingsBrightnessIcon fontSize='small '/> System
           </Box>
@@ -71,53 +51,46 @@ function ModeSelect() {
     </FormControl>
   )
 }
-function ModeToggle() {
-  // Cài đặt > Hình thức
-  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  // const prefersLightMode = useMediaQuery('(prefers-color-scheme: light)')
-  // console.log('prefersDarkMode', prefersDarkMode)
-  // console.log(prefersLightMode)
-
-  // useColorScheme() chỉ chạy lại khi component render lại
-  // useColorScheme() vừa là dùng để lưu trên localStorage và đổi màu giao diện,lấy màu sắc (light / dark / system) của theme.
-  const { mode, setMode } = useColorScheme()
-  return (
-    <Button
-      onClick={() => {
-        // Gọi setMode(...), thay đổi giá trị mode (light ⇄ dark) và React sẽ render lại component  → useColorScheme() được gọi lại
-        setMode(mode === 'light' ? 'dark' : 'light')
-        // nếu ko dùng useColorScheme để ta tự set local
-        // localStorage.setItem('trello-dark-light-mode','')
-        // localStorage.getItem('trello-dark-light-mode')
-      }}
-    >
-      {mode === 'light' ? 'dark' : 'light' }
-    </Button>
-  )
-}
 
 function App() {
   return (
-    <>
-      <ModeSelect />
-      <hr />
-      <ModeToggle />
-      <div>Contained</div>
-      <Typography variant='body2' color="text.secondary">Test Typography</Typography>
-      <Button variant="text" color='success'>Text</Button>
-      <Button variant="contained" startIcon={<DeleteIcon />}>Contained</Button>
-      <Button variant="outlined" endIcon={<SendIcon />}>Outlined</Button>
-      <AccessAlarmIcon />
-      <ThreeDRotation />
-      <br />
-      <HomeIcon />
-      <HomeIcon color="primary" />
-      <HomeIcon color="secondary" />
-      <HomeIcon color="success" />
-      <HomeIcon color="action" />
-      <HomeIcon color="disabled" />
-      <HomeIcon sx={{ color: pink[100] }} />
-    </>
+    // dùng Container thì nó giống bootstrap thục vào giữa để màn hình full luôn thì có thuộc tính
+    //disableGutters mặc định là false ghi thêm vào thì là true  Loại bỏ padding trái và phải
+    //  thêm maxWidth false nghĩa là Container sẽ chiếm toàn bộ chiều rộng (width: 100%). mặc định là 'lg'
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      <Box sx={{
+        backgroundColor: 'primary.light',
+        width: '100%',
+        // cách lấy thuộc tính tự tạo ở theme (tại sao phải dùng vì có hàm tính toán calc nếu ta đổi height ở thằng này thì xuống dưới calc phải sửa lại)
+        height: (theme) => theme.trello.appBarHeight,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <ModeSelect />
+      </Box>
+      <Box sx={{
+        backgroundColor: 'primary.dark',
+        width: '100%',
+        // height: '58px',
+        height: (theme) => theme.trello.boardBarHeight,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        Board Bar
+      </Box>
+      <Box sx={{
+        backgroundColor: 'primary.main',
+        // ``string literal
+        height: (theme) => `calc(100vh - ${theme.trello.boardBarHeight} - ${theme.trello.appBarHeight})`,
+        // height: 'calc(100vh - 48px - 58px)',
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center'
+      }}
+      >
+        Board content
+      </Box>
+    </Container>
   )
 }
 
