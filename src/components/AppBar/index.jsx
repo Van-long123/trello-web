@@ -15,6 +15,7 @@ import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
+import MobileMenu from './Menus/MobileMenu'
 function AppBar() {
   return (
     <>
@@ -46,15 +47,18 @@ function AppBar() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
           <TextField id="outlined-search" label="Search..." type="search" size='small' sx={{ minWidth: '120px' }} />
           <ModeSelect />
-          <Tooltip title="Notifications">
-            <Badge color="secondary" variant="dot" sx={{ cursor: 'pointer' }}>
-              <NotificationsNoneIcon sx={{ color: 'primary.main' }} />
-            </Badge>
-          </Tooltip>
-          <Tooltip title="Help" sx={{ cursor: 'pointer' }}>
-            <HelpOutlineIcon sx={{ color: 'primary.main' }} />
-          </Tooltip>
-          <Profiles />
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+            <Tooltip title="Notifications">
+              <Badge color="secondary" variant="dot" sx={{ cursor: 'pointer' }}>
+                <NotificationsNoneIcon sx={{ color: 'primary.main' }} />
+              </Badge>
+            </Tooltip>
+            <Tooltip title="Help" sx={{ cursor: 'pointer' }}>
+              <HelpOutlineIcon sx={{ color: 'primary.main' }} />
+            </Tooltip>
+            <Profiles />
+          </Box>
+          <MobileMenu />
         </Box>
       </Box>
     </>
