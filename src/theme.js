@@ -24,8 +24,59 @@ const theme = extendTheme({
         secondary:orange
       }
     }
+  },
+  components: {
+    // dùng để tùy chỉnh giao diện của Button
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        }
+      }
+    },
+    // .MuiFormLabel-root
+    MuiFormLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          color: theme.palette.primary.main,
+          fontSize: '0.875rem'
+        })
+      }
+    },
+    // MuiOutlinedInput-root
+    MuiOutlinedInput: {
+      styleOverrides: {
+        // dùng function để sử dụng theme
+        // return {} thì để ngoặc nhọn ở ngoài nữa
+        root: ({ theme }) => ({
+          // console.log(theme)
+          color: theme.palette.primary.main,
+          fontSize: '0.875rem',
+          // tiếp theo là cái border đường viền bên ngoài
+          // https://stackoverflow.com/questions/69860132/how-to-remove-the-border-of-the-material-ui-select-component/73707977#73707977
+          // MuiOutlinedInput-notchedOutline là phần tử con (child) của MuiOutlinedInput
+          // '.MuiOutlinedInput-notchedOutline': {
+          '& .MuiOutlinedInput-notchedOutline': {
+            // để thằng này ở ngoài thì ko ăn phải để trong này
+            borderColor: theme.palette.primary.light
+          },
+          // & là chính MuiOutlinedInput luôn
+          '&:hover': {
+            '& .MuiOutlinedInput-notchedOutline': {
+              // để thằng này ở ngoài thì ko ăn phải để trong này
+              borderColor: theme.palette.primary.main
+            }
+          },
+          // khi click vào các input thì nó đậm lên cách để bỏ đi là f12 lên tìm thằng fieldset (cách bỏ)
+          // '& fieldset' nghĩa là: "khi ở trong MuiOutlinedInput-root, chọn thẻ <fieldset> con".
+          // 'fieldset': { //để này thì nó cũng hiểu là .MuiOutlinedInput-root fieldset
+          '& fieldset': {
+            borderWidth: '1px !important'
+          }
+        })
+      }
+    }
   }
-  // ...other properties
 })
 
 export default theme
