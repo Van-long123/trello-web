@@ -3,7 +3,7 @@ function BoardContent() {
   return (
     <>
       <Box sx={{
-        backgroundColor: 'primary.main',
+        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
         // ``string literal
         height: (theme) => `calc(100vh - ${theme.trello.boardBarHeight} - ${theme.trello.appBarHeight})`,
         // height: 'calc(100vh - 48px - 58px)',
