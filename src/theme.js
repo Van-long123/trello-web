@@ -1,12 +1,15 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
 // import { cyan, deepOrange, orange, teal } from '@mui/material/colors'
-
+const APP_BAR_HEIGHT= '58px'
+const BOARD_BAR_HEIGHT= '60px'
+const BOARD_CONTENT_HEIGHT= `calc(100vh - ${BOARD_BAR_HEIGHT} - ${APP_BAR_HEIGHT})`
 // Create a theme instance.
 const theme = extendTheme({
   // tự tạo ra thuộc tính
   trello: {
-    appBarHeight: '58px',
-    boardBarHeight: '60px'
+    appBarHeight: APP_BAR_HEIGHT,
+    boardBarHeight: BOARD_BAR_HEIGHT,
+    boardContentHeight: BOARD_CONTENT_HEIGHT,
   },
   colorSchemes: {
     // light: {
@@ -26,17 +29,29 @@ const theme = extendTheme({
     // }
   },
   components: {
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          // Typography ko khai báo variant thì mặc định là body 1 vì thế ta chỉ nên ghi đề
+          // những thằng body1 thôi chớ để variant="h1" thì nó ghi đè thành '0.875rem'
+          // fontSize: '0.875rem'
+          '&.MuiTypography-body1': {
+            fontSize: '0.875rem'
+          }
+        }
+      }
+    },
     MuiCssBaseline: {
       styleOverrides: {
         body: {
           // * là apply cho toàn bộ scrollbar
           '*::-webkit-scrollbar': {
-            width: '7px',
-            height: '7px'
+            width: '8px',
+            height: '8px'
           },
           '*::-webkit-scrollbar-thumb': {
             backgroundColor: '#dcdde1',
-            borderRadius: '7px'
+            borderRadius: '8px'
           },
           '*::-webkit-scrollbar-thumb:hover': {
             backgroundColor: 'white'
