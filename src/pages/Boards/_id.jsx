@@ -1,9 +1,9 @@
 import Container from '@mui/material/Container'
 // import useMediaQuery from '@mui/material/useMediaQuery'
-import AppBar from '~/components/AppBar/index'
+import AppBar from '~/components/AppBar/AppBar'
 // import BoardBar from '~/pages/Boards/BoardBar/index'
-import BoardBar from './BoardBar/index'
-import BoardContent from './BoardContent/index'
+import BoardBar from './BoardBar/BoardBar'
+import BoardContent from './BoardContent/BoardContent'
 function Board() {
   return (
     // dùng Container thì nó giống bootstrap thục vào giữa để màn hình full luôn thì có thuộc tính
