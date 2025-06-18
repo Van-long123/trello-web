@@ -55,7 +55,7 @@ function BoardContent() {
           overflowX: 'auto',
           overflowY: 'hidden',
           // để cách trái phải nhìn cho ok hơn
-          '::-webkit-scrollbar-track': { m:2 }
+          '&::-webkit-scrollbar-track': { m:2 }
         }}>
           {/*Box Colum */}
           <Box sx={{
