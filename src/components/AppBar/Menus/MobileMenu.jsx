@@ -56,6 +56,7 @@ function MobileMenu() {
     <>
       <Box sx={{ display: { xs: 'flex', md: 'none' }, color: 'primary.main' }}>
         <IconButton
+          sx={{ color: 'white' }}
           size="large"
           aria-label="show more"
           aria-controls={mobileMenuId}

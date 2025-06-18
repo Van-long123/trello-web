@@ -11,14 +11,15 @@ import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 const MENU_STYLE = {
-  color: 'primary.main',
-  backgroundColor: 'white',
+  color: 'white',
+  backgroundColor: 'transparent',
   border: 'none',
   padding: '5px',
   borderRadius: '4px',
   //xét icon
+  // '.MuiSvgIcon-root': { //& có hay ko đều đc
   '& .MuiSvgIcon-root': {
-    color: 'primary.main'
+    color: 'white'
   },
   '&:hover': {
     bgcolor: 'primary.50'
@@ -39,7 +40,8 @@ function BoardBar() {
         gap: 2,
         paddingX: 2,
         overflowX: 'auto',
-        borderTop: '1px solid #00bfa5'
+        borderBottom: '1px solid white',
+        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2')
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Chip
@@ -75,77 +77,91 @@ function BoardBar() {
           />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button variant="outlined" startIcon={<PersonAddIcon />}>Invite</Button>
+          <Button
+            variant="outlined"
+            startIcon={<PersonAddIcon />}
+            sx={{
+              color: 'white',
+              borderColor: 'white',
+              '&:hover': {
+                borderColor: 'white'
+              }
+            }}
+          >
+            Invite
+          </Button>
           {/* để  total={24} thì cái tròn cuối cùng nó ko tính mấy thằng còn dư lại ở trong group mà nó là 24 - 3(avatar hiện)*/}
           <AvatarGroup
             max={7}
             title='Anh Long'
             sx={{
+              gap: '10px',
               '& .MuiAvatar-root':{
                 width: '34px',
                 height: '34px',
-                fontSize: '16px'
+                fontSize: '16px',
+                border: 'none'
               }
             }}
           >
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
             <Tooltip>
               <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg" 
+                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
           </AvatarGroup>
