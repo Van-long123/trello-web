@@ -37,6 +37,16 @@ function MobileMenu() {
       MenuListProps={{
         'aria-labelledby': 'basic-button-profiles'
       }}
+      anchorOrigin={{
+        // menu sẽ mở ở dưới bên phải
+        vertical: 'center',
+        horizontal: 'left'
+      }}
+      transformOrigin={{
+        // menu sẽ "mở ra" từ góc trên bên phải của chính nó
+        vertical: 'top',
+        horizontal: 'right'
+      }}
     >
       <ProfileMenuContent />
     </Menu>
