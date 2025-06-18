@@ -16,6 +16,7 @@ import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
 import MobileMenu from './Menus/MobileMenu'
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
 function AppBar() {
   return (
     <>
@@ -42,7 +43,7 @@ function AppBar() {
             <Starred />
             <Templates />
           </Box>
-          <Button variant="outlined">Create</Button>
+          <Button variant="outlined" startIcon={<AddToPhotosIcon/>}>Create</Button>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
           <TextField id="outlined-search" label="Search..." type="search" size='small' sx={{ minWidth: '120px' }} />
