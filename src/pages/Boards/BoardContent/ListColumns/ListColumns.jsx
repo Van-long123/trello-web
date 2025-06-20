@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Column from './Column/Column'
 import Button from '@mui/material/Button'
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-function ListColumns() {
+function ListColumns({ columns }) {
   return (
     <>
       {/* Box này khi co lại nhỏ thì sinh ra scroll dưới thôi nên thằng cha ở trên p trên dưới thì scoll đi lên */}
@@ -17,8 +17,12 @@ function ListColumns() {
         // để cách trái phải nhìn cho ok hơn
         '&::-webkit-scrollbar-track': { m: 2 }
       }}>
-        <Column />
-        <Column />
+        {columns?.map((column, index) =>
+          // khi map thì component nó cần key thì ta dùng key là index luôn   dùng key index khi dữ liệu ko có id nhưng mình có id mà nên dùng
+          //<Column key= {index} />
+          <Column key= {column._id} column= {column} />
+        )}
+        {/* <Column /> */}
 
         {/* Box Add New Column */}
         <Box sx={{
