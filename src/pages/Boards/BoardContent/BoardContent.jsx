@@ -2,7 +2,17 @@ import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { arrayMove } from '@dnd-kit/sortable'
 import { mapOrder } from '~/utils/sorts'
-import { DndContext, PointerSensor, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core'
+import { 
+  DndContext, 
+  PointerSensor, 
+  MouseSensor, 
+  TouchSensor, 
+  useSensor, 
+  useSensors, 
+  DragOverlay, 
+  defaultDropAnimationSideEffects,
+  closestCorners
+} from '@dnd-kit/core'
 import { useEffect, useState } from 'react'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
@@ -57,16 +67,6 @@ function BoardContent({ board }) {
     setActiveDragItemId(event?.active?.id)
     setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
     setActiveDragItemData(event?.active?.data?.current)
-  }
-  // Animation khi thả (Drop) phần tử Test bằng cách kéo xong thả trực tiếp và nhìn phần giữ chỗ Overlay
-  const dropAnimation = {
-    sideEffects: defaultDropAnimationSideEffects({
-      styles: {
-        active: {
-          opacity: '0.5'
-        }
-      }
-    })
   }
   //Quá trình kéo 1 phần tử (column, card) khi đang kéo column hoặc card là nó sẽ đc gọi
   const handleDragOver = (event) => {
@@ -175,6 +175,16 @@ function BoardContent({ board }) {
     setActiveDragItemType(null)
     setActiveDragItemData(null)
   }
+  // Animation khi thả (Drop) phần tử Test bằng cách kéo xong thả trực tiếp và nhìn phần giữ chỗ Overlay
+  const dropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: '0.5'
+        }
+      }
+    })
+  }
   return (
     <>
       {/* onDragEnd={} có nghĩa là sau khi ta kết thúc cái kéo sẽ gọi hàm handleDragEnd*/}
@@ -183,7 +193,12 @@ function BoardContent({ board }) {
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}
         onDragStart={handleDragStart}
+        //Cảm biến
         sensors={sensors}
+        // Thuật toán phát hiện va chạm (nếu không có nó thì card với cover lớn sẽ không kéo qua Column được vì lúc này nó
+        // đang bị conflict giữa card và column), chúng ta sẽ dùng losestCorners thay vì closestCenter
+        // https://docs.dndkit.com/api-documentation/context-provider/collision-detection-algorithms
+        collisionDetection={closestCorners}
       >
         <Box sx={{
           bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
