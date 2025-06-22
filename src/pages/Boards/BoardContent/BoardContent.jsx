@@ -31,7 +31,7 @@ function BoardContent({ board }) {
 
   const handleDragEnd = (event) => {
     // event là giá trị ta nhận đc từ thư viện kéo giá
-    // console.log(event)
+    console.log(event) //kéo ở column hay card đều chạy vào hàm này
     const { active, over } = event
 
     // - Kiểm tra nếu không tồn tại over (kéo linh tinh ra ngoài thì return luôn tránh lỗi)
