@@ -23,7 +23,7 @@ import { CSS } from '@dnd-kit/utilities'
 function Column({ column }) {
   // console.log(column)
   //useSortable cần id để định danh được đang kéo thả column nào
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     // bổ sung data vào trong cái dữ liệu sau khi kéo thả
     data: { ...column }
@@ -33,7 +33,9 @@ function Column({ column }) {
     // Nếu sử dụng CSS.Transform như docs sẽ lỗi kiểu stretch
     // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
-    transition
+    transition,
+    height: '100%',
+    opacity: isDragging ? 0.5 : undefined
     // height: 'fit-content'
   }
 

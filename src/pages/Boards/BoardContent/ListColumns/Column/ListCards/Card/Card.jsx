@@ -11,7 +11,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 function Card({ card }) {
   //useSortable cần id để định danh được đang kéo thả column nào
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
     // bổ sung data vào trong cái dữ liệu sau khi kéo thả
     data: { ...card }
@@ -21,7 +21,8 @@ function Card({ card }) {
     // Nếu sử dụng CSS.Transform như docs sẽ lỗi kiểu stretch
     // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
-    transition
+    transition,
+    opacity: isDragging ? 0.5 : undefined
   }
   const shouldShowCardActions= () => {
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
