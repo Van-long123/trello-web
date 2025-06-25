@@ -131,7 +131,6 @@ function BoardContent({ board }) {
     })
   }
   const handleDragStart = (event) => {
-    // console.log(event)
     // Khi gọi nhiều setState
     // Nó chỉ re-render 1 lần duy nhất sau khi tất cả setState hoàn tất
     setActiveDragItemId(event?.active?.id)
@@ -150,6 +149,7 @@ function BoardContent({ board }) {
     //Còn nếu kéo card thì xử lý thêm để có thể kéo card qua lại giữa các cột
     // console.log('handleDragOver', event)
     const { active, over } = event
+    // console.log('handleDragOver',over)
     //Cần đảm bảo nếu không tồn tại active hoặc over (khi kéo ra khỏi phạm vi container) thì không làm gì
     if (!active || !over) return
     // activeDraggingCard:Là cái card đang được kéo
@@ -182,7 +182,7 @@ function BoardContent({ board }) {
     // event là giá trị ta nhận đc từ thư viện kéo giá
     // console.log(event) //kéo ở column hay card đều chạy vào hàm này
     const { active, over } = event
-
+    // console.log('handleDragEnd', over)
     // - Kiểm tra nếu không tồn tại over (kéo linh tinh ra ngoài thì return luôn tránh lỗi)
     if (!over) return
     //Xử lý kéo thả card
@@ -288,23 +288,31 @@ function BoardContent({ board }) {
     // nếu kéo thả card thì custom thuật toán
     // trả về danh sách các container đang nằm dưới con trỏ chuột hiện tại
     const pointerIntersections = pointerWithin(args)
+
+    //Nếu pointerIntersections là mảng rỗng, return luôn không làm gì hết.
+    // Fix triệt về cái bug flickering của thư viện Dnd-kit trong trường hợp sau:
+    // Kéo một cái card có image cover lớn và kéo lên phía trên cùng ra khỏi khu vực kéo thả
+    if (!pointerIntersections?.length) return
     // Thuật toán phát hiện va chạm sẽ trả về một mảng các va chạm ở đây
-    const intersections = !!pointerIntersections?.length
-      ? pointerIntersections
-      : rectIntersection(args) //là hàm phát hiện va chạm theo vùng hình chữ nhật.Dùng để xác định xem phần tử đang được kéo đang chạm vào container nào
+    // (không cần đoạn này nữa vì bản chất đoạn này y như pointerWithin(args) ở trên thôi còn nếu rỗng thì return như trên)
+    // const intersections = !!pointerIntersections?.length
+    //   ? pointerIntersections
+    //   : rectIntersection(args) //là hàm phát hiện va chạm theo vùng hình chữ nhật.Dùng để xác định xem phần tử đang được kéo đang chạm vào container nào
+
+
     // Tìm overId đầu tiên trong đám intersections ở trên
     // khi kéo card qua bên column khác đầu tiên là cardId của nó sau đó tới columnId của column kia rồi mới tới cardId muốn thay đổi
     // bug nhấp nhấy là nó bị ở chỗ tới columnId
-    let overId = getFirstCollision(intersections, 'id')// lấy ra id đầu tiên trong danh sách intersections trả về.
+    let overId = getFirstCollision(pointerIntersections, 'id')// lấy ra id đầu tiên trong danh sách intersections trả về.
     if (overId) {
       // Nếu cái over nó là column thì sẽ tìm tới cái cardId gần nhất bên trong khu vực va chạm
       //đó dựa vào thuật toán phát hiện va chạm closestCenter hoặc closestCorners đều được.
-      // Tuy nhiên ở đây dùng closestCenter mình thấy mượt mà hơn.
+      // Tuy nhiên ở đây dùng closestCorners mình thấy mượt mà hơn.2 thằng như nhau đều tìm ra thằng phần tử gần con trỏ nhất
       const checkColumn = orderedColumns.find(column => column._id === overId )
       if (checkColumn) {
         // console.log('overId before: ', overId)
-        // closestCenter(...): Dùng thuật toán có sẵn trong dnd-kit để tìm phần tử gần con trỏ nhất.
-        overId = closestCenter({
+        // closestCorners(...): Dùng thuật toán có sẵn trong dnd-kit để tìm phần tử gần con trỏ nhất.
+        overId = closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => {
             return (container.id !== overId) && checkColumn?.cardOrderIds?.includes(container.id)
