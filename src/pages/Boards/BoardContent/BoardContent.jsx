@@ -20,7 +20,8 @@ import {
 import { useEffect, useState, useCallback, useRef } from 'react'
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
-import cloneDeep from 'lodash/cloneDeep'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/utils/formatters'
 // dùng để phân biệt cái ta đang active,kéo là column hay card
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
@@ -102,10 +103,18 @@ function BoardContent({ board }) {
       // ko muốn đụng chạm vào 2 thằng trên
       const nextActiveColumn = nextColumns.find(column => column._id === activeColumn._id)
       const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
+      // nextActiveColumn: column cũ
       if (nextActiveColumn) {
         // Xóa card ở cái column active (cũng có thể hiểu là column cũ, cái lúc mà kéo card ra khỏi nó để sang column khác)
         //Khi xóa card trong nextActiveColumn, thì nextColumns cũng bị thay đổi tương ứng,vì nextActiveColumn là tham chiếu tới phần tử bên trong nextColumns
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+
+        // Add Placeholder Card if Column is empty: All Cards are pulled away, there are no more.
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+          // console.log(nextActiveColumn.cards  )
+        }
+
         //Cập nhật lại mảng cardOrderIds
         // nextActiveColumn.cardOrderIds = nextActiveColumn.cardOrderIds.filter(card => card !== activeDraggingCardId)
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
@@ -122,6 +131,10 @@ function BoardContent({ board }) {
         }
         // Tiếp theo là thêm cái card đang kéo vào overColumn theo vị trí index mới
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, rebuild_activeDraggingData)
+
+        // Xóa cái Placeholder Card đi nếu nó đang tồn tại
+        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card?.FE_PlaceHolderCard)
+
         // Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
