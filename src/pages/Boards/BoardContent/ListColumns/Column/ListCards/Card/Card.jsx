@@ -10,16 +10,11 @@ import AttachmentIcon from '@mui/icons-material/Attachment'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 function Card({ card }) {
-  //useSortable cần id để định danh được đang kéo thả column nào
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
-    // bổ sung data vào trong cái dữ liệu sau khi kéo thả
     data: { ...card }
   })
   const dndKitCardStyles = {
-    // touchAction: 'none', //dành cho sensor default dạng PointerSensor
-    // Nếu sử dụng CSS.Transform như docs sẽ lỗi kiểu stretch
-    // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : undefined,
@@ -33,7 +28,6 @@ function Card({ card }) {
       <MuiCard
         ref={setNodeRef}
         style={dndKitCardStyles}
-        // bỏ hai thằng này vào cho đủ props để thư viện làm việc
         {...attributes}
         {...listeners}
         sx={{

@@ -22,13 +22,11 @@ import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 function AppBar() {
-  // const [anchorEl, setAnchorEl] = React.useState('') //React.useState('') và useState('') như nhau
   const [searchValue, setSearchValue] = useState('')
   return (
     <>
       <Box px={2} sx={{
         width: '100%',
-        // cách lấy thuộc tính tự tạo ở theme (tại sao phải dùng vì có hàm tính toán calc nếu ta đổi height ở thằng này thì xuống dưới calc phải sửa lại)
         height: (theme) => theme.trello.appBarHeight,
         display: 'flex',
         alignItems: 'center',
@@ -44,7 +42,6 @@ function AppBar() {
             <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color: 'white' }} fontSize="small" />
             <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>Trello</Typography>
           </Box>
-          {/* md là lớn hơn 900px là flex còn nhỏ hơn là none */}
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Workspaces />
             <Recent />
@@ -66,11 +63,9 @@ function AppBar() {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
-          {/*TextField là thằng cha MuiFormControl-root */}
           <TextField
             id="outlined-search"
             label="Search..."
-            // để search thì mui tự động có dấu x để css rất khoai nên để text
             type="text"
             size='small'
             value={searchValue}

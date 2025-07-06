@@ -5,7 +5,6 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import ProfileMenuContent from './ProfileMenuContent'
 function Profiles() {
-  // là ban đầu anchorEl= null khi setAnchorEl() được gọi nó sẽ set giá trị anchorEl lại và chạy lại component
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl) // truyển sang kiểu boolean
   const handleClick = (event) => {

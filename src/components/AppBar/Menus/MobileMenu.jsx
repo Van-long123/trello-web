@@ -38,12 +38,10 @@ function MobileMenu() {
         'aria-labelledby': 'basic-button-profiles'
       }}
       anchorOrigin={{
-        // menu sẽ mở ở dưới bên phải
         vertical: 'center',
         horizontal: 'left'
       }}
       transformOrigin={{
-        // menu sẽ "mở ra" từ góc trên bên phải của chính nó
         vertical: 'top',
         horizontal: 'right'
       }}
@@ -70,14 +68,12 @@ function MobileMenu() {
       <Menu
         anchorEl={mobileMoreAnchorEl}
         anchorOrigin={{
-          // menu sẽ mở ở dưới bên phải
           vertical: 'bottom',
           horizontal: 'right'
         }}
         id={mobileMenuId}
         keepMounted
         transformOrigin={{
-          // menu sẽ "mở ra" từ góc trên bên phải của chính nó
           vertical: 'top',
           horizontal: 'right'
         }}

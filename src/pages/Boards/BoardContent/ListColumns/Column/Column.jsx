@@ -21,26 +21,20 @@ import { mapOrder } from '~/utils/sorts'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 function Column({ column }) {
-  // console.log(column)
-  //useSortable cần id để định danh được đang kéo thả column nào
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     // bổ sung data vào trong cái dữ liệu sau khi kéo thả
     data: { ...column }
   })
   const dndKitColumnStyles = {
-    // touchAction: 'none', //dành cho sensor default dạng PointerSensor
-    // Nếu sử dụng CSS.Transform như docs sẽ lỗi kiểu stretch
-    // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition,
     height: '100%',
     opacity: isDragging ? 0.5 : undefined
-    // height: 'fit-content'
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl) // truyển sang kiểu boolean
+  const open = Boolean(anchorEl)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -53,7 +47,6 @@ function Column({ column }) {
       <div
         ref={setNodeRef}
         style={dndKitColumnStyles}
-        // bỏ hai thằng này vào cho đủ props để thư viện làm việc
         {...attributes}
       >
         {/*Box Colum */}
@@ -65,7 +58,6 @@ function Column({ column }) {
             bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#333643' : '#ebecf0'),
             ml: 2,
             borderRadius: '6px',
-            // Chiều cao của phần tử sẽ tự động điều chỉnh vừa đủ để chứa toàn bộ nội dung bên trong.
             height: 'fit-content',
             maxHeight: (theme) => `calc(${theme.trello.boardContentHeight} - ${theme.spacing(5)})`
           }}

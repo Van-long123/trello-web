@@ -17,8 +17,6 @@ const MENU_STYLE = {
   border: 'none',
   padding: '5px',
   borderRadius: '4px',
-  //xét icon
-  // '.MuiSvgIcon-root': { //& có hay ko đều đc
   '& .MuiSvgIcon-root': {
     color: 'white'
   },
@@ -30,10 +28,6 @@ const MENU_STYLE = {
   }
 }
 function BoardBar({ board }) {
-// function BoardBar(props) {
-  // props là 1 object
-  // console.log(props.board)
-  // const { board } = props //object destructuring
   return (
     <>
       <Box sx={{
@@ -54,7 +48,6 @@ function BoardBar({ board }) {
             icon={<DashboardIcon />}
             label={board?.title}
             clickable
-          // onClick= {() => {}}
           />
           <Chip
             sx={MENU_STYLE}
@@ -95,7 +88,6 @@ function BoardBar({ board }) {
           >
             Invite
           </Button>
-          {/* để  total={24} thì cái tròn cuối cùng nó ko tính mấy thằng còn dư lại ở trong group mà nó là 24 - 3(avatar hiện)*/}
           <AvatarGroup
             max={7}
             title='Anh Long'

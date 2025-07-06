@@ -9,7 +9,6 @@ import Divider from '@mui/material/Divider'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 function Templates() {
-  // là ban đầu anchorEl= null khi setAnchorEl() được gọi nó sẽ set giá trị anchorEl lại và chạy lại component
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl) // truyển sang kiểu boolean
   const handleClick = (event) => {
