@@ -4,8 +4,8 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { mapOrder } from '~/utils/sorts'
 import {
   DndContext,
-  MouseSensor,
-  TouchSensor,
+  // MouseSensor,
+  // TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -19,6 +19,7 @@ import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/utils/formatters'
+import { MouseSensor, TouchSensor } from '~/customLibs/DndKitSensors'
 // dùng để phân biệt cái ta đang active,kéo là column hay card
 const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
