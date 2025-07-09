@@ -43,12 +43,14 @@ function BoardBar({ board }) {
         '&::-webkit-scrollbar-track': { m:2 }
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Chip
-            sx={MENU_STYLE}
-            icon={<DashboardIcon />}
-            label={board?.title}
-            clickable
-          />
+          <Tooltip title={board?.description}>
+            <Chip
+              sx={MENU_STYLE}
+              icon={<DashboardIcon />}
+              label={board?.title}
+              clickable
+            />
+          </Tooltip>
           <Chip
             sx={MENU_STYLE}
             icon={<VpnLockIcon />}
@@ -104,62 +106,62 @@ function BoardBar({ board }) {
               }
             }}
           >
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
             </Tooltip>
-            <Tooltip>
+            <Tooltip title="Anh Long">
               <Avatar alt="Anh Long"
                 src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
               />
