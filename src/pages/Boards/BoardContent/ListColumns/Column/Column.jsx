@@ -158,7 +158,8 @@ function Column({ column }) {
           <Box sx={{
             height: (theme) => (theme.trello.columnFooterHeight),
             p: 2
-          }}>
+          }}
+          >
             {!openNewCardForm
               ? <Box sx={{
                 height:'100%',
@@ -174,6 +175,7 @@ function Column({ column }) {
               :
               <Box sx={{ height:'100%', display: 'flex', alignItems: 'center', gap: 1 }}>
                 <TextField
+                  data-no-dnd
                   label="Enter card title...."
                   type="text"
                   size='small'
