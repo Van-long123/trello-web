@@ -25,7 +25,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
-function BoardContent({ board, createNewColumn, createNewCard }) {
+function BoardContent({ board, createNewColumn, createNewCard, moveColumns }) {
   const mouseSenser = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
   const touchSenser = useSensor(TouchSensor, { activationConstraint: {
     delay: 250,
@@ -139,6 +139,8 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
   const handleDragEnd = (event) => {
     const { active, over } = event
     if (!over) return
+
+    //Xử lý kéo thả card
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) {
       const { id: activeDraggingCardId, data: { current : activeDraggingData } } = active
       const { id: overCardId } = over
@@ -181,6 +183,9 @@ function BoardContent({ board, createNewColumn, createNewCard }) {
         const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id)
         const dndOrderedColumns = arrayMove(orderedColumns, oldColumnIndex, newColumnIndex)
 
+        moveColumns(dndOrderedColumns)
+
+        // Vẫn gọi update State ở đây để tránh delay hoặc Flickering giao diện lúc kéo thả cần phải chờ gọi API
         setOrderedColumns(dndOrderedColumns)
       }
     }
