@@ -7,24 +7,27 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title')
       return
     }
-    // console.log(newColumnTitle)
-    //Gọi api ở đây
+    //Tạo dữ liệu column để gọi API
+    const newColumnData = {
+      title: newColumnTitle
+    }
+
+    await createNewColumn(newColumnData)
 
     //Đóng lại trạng thái thêm Column mới và Clear Input đi
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
   }
-
   const itemIds = columns?.map(column => column._id)
   return (
     <>
@@ -40,7 +43,7 @@ function ListColumns({ columns }) {
           '&::-webkit-scrollbar-track': { m: 2 }
         }}>
           {columns?.map((column, index) =>
-            <Column key= {column._id} column= {column} />
+            <Column key= {column._id} column= {column} createNewCard={createNewCard} />
           )}
           {/* <Column /> */}
 

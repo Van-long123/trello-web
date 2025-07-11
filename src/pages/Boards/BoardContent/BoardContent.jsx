@@ -25,7 +25,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
-function BoardContent({ board }) {
+function BoardContent({ board, createNewColumn, createNewCard }) {
   const mouseSenser = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
   const touchSenser = useSensor(TouchSensor, { activationConstraint: {
     delay: 250,
@@ -76,7 +76,6 @@ function BoardContent({ board }) {
       const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
       if (nextActiveColumn) {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
-
         if (isEmpty(nextActiveColumn.cards)) {
           nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
         }
@@ -112,7 +111,6 @@ function BoardContent({ board }) {
     }
   }
   const handleDragOver = (event) => {
-
     if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
 
     const { active, over } = event
@@ -243,7 +241,11 @@ function BoardContent({ board }) {
           p: '5px 0'
         }}
         >
-          <ListColumns columns= {orderedColumns} />
+          <ListColumns
+            columns= {orderedColumns}
+            createNewColumn={createNewColumn}
+            createNewCard={createNewCard}
+          />
           <DragOverlay dropAnimation={dropAnimation}>
             {/* <div>Column</div> */}
             {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column= {activeDragItemData} />}
