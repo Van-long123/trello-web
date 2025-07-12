@@ -9,7 +9,11 @@ export const fetchBoardDetailsAPI = async (boardId) => {
 
 export const updateBoardDetailsAPI = async (boardId, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
-  // axios sẽ trả kết quả của be gửi về, trong data
+  return response.data
+}
+
+export const moveCartToDifferentAPI = async (updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/boards/supports/moving_card`, updateData)
   return response.data
 }
 /** Columns */
@@ -19,7 +23,6 @@ export const createNewColumnAPI = async (newColumnData) => {
 }
 export const updateColumnDetailsAPI = async (columnId, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/columns/${columnId}`, updateData)
-  // axios sẽ trả kết quả của be gửi về, trong data
   return response.data
 }
 
