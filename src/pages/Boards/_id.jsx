@@ -65,13 +65,20 @@ function Board() {
       ...newCardData,
       boardId: board._id
     })
-
     //Cập nhật lại state board
     const newBoard = cloneDeep(board)
     const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
     if (columnToUpdate) {
-      columnToUpdate.cards.push(createdCard)
-      columnToUpdate.cardOrderIds.push(createdCard._id)
+      //Nếu column rỗng thì chứa 1 Placeholder Card
+      if (columnToUpdate.cards.some(card => card.FE_PlaceHolderCard)) {
+        columnToUpdate.cards = [createdCard]
+        columnToUpdate.cardOrderIds = [createdCard._id]
+      }
+      else {
+        // Ngược lại column có data thì push vào cuối mảng
+        columnToUpdate.cards.push(createdCard)
+        columnToUpdate.cardOrderIds.push(createdCard._id)
+      }
     }
     setBoard(newBoard)
   }
@@ -119,10 +126,13 @@ function Board() {
     setBoard(newBoard)
 
     //Gọi API xử lý
+    let preCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    //Xử lý vấn đề khi kéo card cuối cùng ra khỏi column
+    if (preCardOrderIds[0].includes('placeholder-card')) preCardOrderIds = []
     moveCartToDifferentAPI({
       currentCardId,
       prevColumnId,
-      preCardOrderIds: dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      preCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
     })
