@@ -30,7 +30,8 @@ function BoardContent({
   createNewCard,
   moveColumns,
   moveCardInTheSameColumn,
-  moveCartToDifferentColumn
+  moveCartToDifferentColumn,
+  deleteColumnDetails
 }) {
   const mouseSenser = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
   const touchSenser = useSensor(TouchSensor, { activationConstraint: {
@@ -266,6 +267,7 @@ function BoardContent({
             columns= {orderedColumns}
             createNewColumn={createNewColumn}
             createNewCard={createNewCard}
+            deleteColumnDetails={deleteColumnDetails}
           />
           <DragOverlay dropAnimation={dropAnimation}>
             {/* <div>Column</div> */}
