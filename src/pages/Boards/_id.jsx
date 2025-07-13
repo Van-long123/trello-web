@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import Container from '@mui/material/Container'
 import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
@@ -13,7 +14,8 @@ import {
   createNewCardAPI,
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  moveCartToDifferentAPI
+  moveCartToDifferentAPI,
+  deleteColumnDetailsAPI
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty, cloneDeep } from 'lodash'
@@ -138,6 +140,24 @@ function Board() {
     })
   }
 
+  //Xử lý xóa 1 column và cards bên trong nó
+  const deleteColumnDetails = (columnId) => {
+    // Update chuẩn dữ liệu state board
+    const newBoard = cloneDeep(board)
+    newBoard.columns = newBoard.columns.filter(column => column._id !== columnId)
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(column => column._id !== columnId)
+    setBoard(newBoard)
+    // Gọi API xử lý
+    deleteColumnDetailsAPI('686a993347b0301e61c873b4').then(res => {
+    // deleteColumnDetailsAPI(columnId).then(res => {
+      if (res.deletedCountColumn) {
+        toast.success(res?.deleteResult)
+      } else {
+        toast.error(res?.deleteResult)
+      }
+    })
+  }
+
   if (!board) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: 2 }}>
@@ -157,6 +177,7 @@ function Board() {
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCartToDifferentColumn={moveCartToDifferentColumn}
+        deleteColumnDetails={deleteColumnDetails}
       />
     </Container>
   )
