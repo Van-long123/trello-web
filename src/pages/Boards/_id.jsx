@@ -150,11 +150,7 @@ function Board() {
     // Gọi API xử lý
     deleteColumnDetailsAPI('686a993347b0301e61c873b4').then(res => {
     // deleteColumnDetailsAPI(columnId).then(res => {
-      if (res.deletedCountColumn) {
-        toast.success(res?.deleteResult)
-      } else {
-        toast.error(res?.deleteResult)
-      }
+      toast.success(res?.deleteResult)
     })
   }
 
