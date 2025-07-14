@@ -46,19 +46,22 @@ function Board() {
 
   // Func này có nhiệm vụ gọi API tạo mới Column và làm lại dữ liệu State Board
   const createNewColumn = async (newColumnData) => {
-    const createdColumn = await createNewColumnAPI({
+    createNewColumnAPI({
       ...newColumnData,
       boardId: board._id
+    }).then((res) => {
+      const createdColumn = res?.getNewColumn
+      createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+      createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+      //Cập nhật lại state board
+      const newBoard = cloneDeep(board)
+      newBoard.columns.push(createdColumn)
+      newBoard.columnOrderIds.push(createdColumn._id)
+      setBoard(newBoard)
+      toast.success(res?.message)
     })
 
-    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
-    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
-
-    //Cập nhật lại state board
-    const newBoard = cloneDeep(board)
-    newBoard.columns.push(createdColumn)
-    newBoard.columnOrderIds.push(createdColumn._id)
-    setBoard(newBoard)
   }
 
   // Func này có nhiệm vụ gọi API tạo mới Card và làm lại dữ liệu State Board
