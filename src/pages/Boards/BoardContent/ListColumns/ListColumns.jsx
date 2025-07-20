@@ -7,22 +7,44 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+import { generatePlaceholderCard } from '~/utils/formatters'
+import { createNewColumnAPI } from '~/apis/index'
+import { cloneDeep } from 'lodash'
+import {
+  updateCurrentActiveBoard,
+  selectorCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+import { useSelector, useDispatch } from 'react-redux'
+function ListColumns({ columns }) {
+  const board = useSelector(selectorCurrentActiveBoard)
+  const dispatch = useDispatch()
+
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
+
   const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title')
       return
     }
-    //Tạo dữ liệu column để gọi API
-    const newColumnData = {
-      title: newColumnTitle
-    }
+    //  Gọi API tạo mới Column và làm lại dữ liệu State Board
+    createNewColumnAPI({
+      title: newColumnTitle,
+      boardId: board._id
+    }).then((res) => {
+      const createdColumn = res?.getNewColumn
+      createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+      createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
 
-    await createNewColumn(newColumnData)
+      //Cập nhật lại state board
+      const newBoard = cloneDeep(board)
+      newBoard.columns.push(createdColumn)
+      newBoard.columnOrderIds.push(createdColumn._id)
+      dispatch(updateCurrentActiveBoard(newBoard))
+      toast.success(res?.message)
+    })
 
     //Đóng lại trạng thái thêm Column mới và Clear Input đi
     toggleOpenNewColumnForm()
@@ -46,8 +68,6 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
             <Column
               key={column._id}
               column={column}
-              createNewCard={createNewCard}
-              deleteColumnDetails={deleteColumnDetails}
             />
           )}
           {/* <Column /> */}

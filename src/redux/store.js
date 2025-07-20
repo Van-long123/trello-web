@@ -1,4 +1,4 @@
-//Redux: State management tool
+//cấu hình Redux Store
 import { configureStore } from '@reduxjs/toolkit'
 import { activeBoardReducer } from './activeBoard/activeBoardSlice'
 
