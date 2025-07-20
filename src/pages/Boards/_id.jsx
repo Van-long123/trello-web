@@ -102,6 +102,8 @@ function Board() {
       <BoardContent
         board={board}
 
+        // 3 cái trường hợp move dưới đây thì giữ nguyên đề code xử lý kéo thả ở phần BoardContent
+        // không bị quá dài mất kiểm soát khi đọc code, maintain.
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCartToDifferentColumn={moveCartToDifferentColumn}
