@@ -44,11 +44,12 @@ function ListColumns({ columns }) {
       newBoard.columnOrderIds.push(createdColumn._id)
       dispatch(updateCurrentActiveBoard(newBoard))
       toast.success(res?.message)
+
+      //Đóng lại trạng thái thêm Column mới và Clear Input đi
+      toggleOpenNewColumnForm()
+      setNewColumnTitle('')
     })
 
-    //Đóng lại trạng thái thêm Column mới và Clear Input đi
-    toggleOpenNewColumnForm()
-    setNewColumnTitle('')
   }
   const itemIds = columns?.map(column => column._id)
   return (
