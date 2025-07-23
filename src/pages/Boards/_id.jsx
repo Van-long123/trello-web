@@ -3,15 +3,12 @@ import Container from '@mui/material/Container'
 import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import {
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
   moveCartToDifferentAPI
 } from '~/apis'
 import { cloneDeep } from 'lodash'
-import Typography from '@mui/material/Typography'
 import {
   fetchBoardDetailsAPI,
   updateCurrentActiveBoard,
@@ -19,6 +16,8 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
+
 function Board() {
   const dispatch = useDispatch()
   // Không dùng state của component nữa mà chuyển qua dùng state của redux
@@ -86,12 +85,7 @@ function Board() {
   }
 
   if (!board) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', gap: 2 }}>
-        <CircularProgress />
-        <Typography>Loading Board...</Typography>
-      </Box>
-    )
+    return <PageLoadingSpinner caption='Loading Board...'/>
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
