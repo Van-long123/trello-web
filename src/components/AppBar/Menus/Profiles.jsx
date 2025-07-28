@@ -4,6 +4,9 @@ import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import ProfileMenuContent from './ProfileMenuContent'
+import { useSelector } from 'react-redux'
+import { selectorCurrentUser } from '~/redux/user/userSlice'
+
 function Profiles() {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl) // truyển sang kiểu boolean
@@ -13,6 +16,9 @@ function Profiles() {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  const currentUser = useSelector(selectorCurrentUser)
+
   return (
     <>
       <Tooltip title="Account settings">
@@ -26,8 +32,8 @@ function Profiles() {
         >
           <Avatar
             sx={{ width: 36, height: 36 }}
-            alt='Beautiful'
-            src='https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg'
+            alt={currentUser?.displayName}
+            src={currentUser?.avatar}
           />
         </IconButton>
       </Tooltip>
@@ -40,7 +46,7 @@ function Profiles() {
           'aria-labelledby': 'basic-button-profiles'
         }}
       >
-        <ProfileMenuContent />
+        <ProfileMenuContent currentUser={currentUser} handleCloseMenu={handleClose}/>
       </Menu>
     </>
   )

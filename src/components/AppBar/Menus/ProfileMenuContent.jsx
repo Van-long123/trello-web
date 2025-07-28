@@ -5,15 +5,34 @@ import Avatar from '@mui/material/Avatar'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
+import {
+  logoutUserApi
+} from '~/redux/user/userSlice'
+import { useDispatch } from 'react-redux'
+import { useConfirm } from 'material-ui-confirm'
 
-function ProfileMenuContent() {
+function ProfileMenuContent({ currentUser, handleCloseMenu }) {
+
+  const dispatch = useDispatch()
+
+  const confirmLogout = useConfirm()
+  const handleLogout = () => {
+    confirmLogout({
+      title: 'Log out of your account?',
+      confirmationText: 'Confirm',
+      cancellationText: 'Cancel'
+    }).then(() => {
+      dispatch(logoutUserApi())
+      handleCloseMenu()
+    }).catch(() => {})
+  }
+
   return (
     <>
-      <MenuItem>
-        <Avatar sx={{ width: 30, height: 30, mr: 2 }} /> Profile
-      </MenuItem>
-      <MenuItem>
-        <Avatar sx={{ width: 30, height: 30, mr: 2 }} /> My account
+      <MenuItem sx={{
+        '&:hover': { color: 'success.light' }
+      }}>
+        <Avatar sx={{ width: 30, height: 30, mr: 2 }} src={currentUser?.avatar} /> Profile
       </MenuItem>
       <Divider />
       <MenuItem>
@@ -28,9 +47,12 @@ function ProfileMenuContent() {
         </ListItemIcon>
         Settings
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={handleLogout} sx={{
+        '&:hover': { color: 'warning.dark', '& .logout-icon': { color: 'warning.dark' } }
+      }}
+      >
         <ListItemIcon>
-          <Logout fontSize="small" />
+          <Logout fontSize="small" className="logout-icon"/>
         </ListItemIcon>
         Logout
       </MenuItem>
