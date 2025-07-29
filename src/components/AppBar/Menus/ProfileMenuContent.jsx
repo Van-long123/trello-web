@@ -10,6 +10,8 @@ import {
 } from '~/redux/user/userSlice'
 import { useDispatch } from 'react-redux'
 import { useConfirm } from 'material-ui-confirm'
+import { Link } from 'react-router-dom'
+import AccountTab from '~/pages/Settings/AccountTab'
 
 function ProfileMenuContent({ currentUser, handleCloseMenu }) {
 
@@ -29,11 +31,13 @@ function ProfileMenuContent({ currentUser, handleCloseMenu }) {
 
   return (
     <>
-      <MenuItem sx={{
-        '&:hover': { color: 'success.light' }
-      }}>
-        <Avatar sx={{ width: 30, height: 30, mr: 2 }} src={currentUser?.avatar} /> Profile
-      </MenuItem>
+      <Link to="/settings/account" >
+        <MenuItem sx={{
+          '&:hover': { color: 'success.light' }
+        }}>
+          <Avatar sx={{ width: 30, height: 30, mr: 2 }} src={currentUser?.avatar} /> Profile
+        </MenuItem>
+      </Link>
       <Divider />
       <MenuItem>
         <ListItemIcon>

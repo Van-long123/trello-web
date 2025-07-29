@@ -97,16 +97,16 @@ function MobileMenu() {
           <Typography variant='body1' p={2}>Profile</Typography>
         </MenuItem>
         <MenuItem>
-          <Tooltip title="Notifications" >
-            <Badge color="secondary" variant="dot" sx={{ cursor: 'pointer' }}>
-              <NotificationsNoneIcon sx={{ color: 'primary.main' }} />
+          <Tooltip title="Notifications">
+            <Badge color="warning" variant="dot" sx={{ cursor: 'pointer' }}>
+              <NotificationsNoneIcon />
             </Badge>
           </Tooltip>
           <Typography p= {2}>Notifications</Typography>
         </MenuItem>
         <MenuItem>
           <Tooltip title="Help" sx={{ cursor: 'pointer' }}>
-            <HelpOutlineIcon sx={{ color: 'primary.main' }} />
+            <HelpOutlineIcon />
           </Tooltip>
           <Typography p= {2}>Help</Typography>
         </MenuItem>
