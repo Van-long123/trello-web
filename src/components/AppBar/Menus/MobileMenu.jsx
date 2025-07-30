@@ -11,6 +11,9 @@ import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ProfileMenuContent from './ProfileMenuContent'
+import { useSelector } from 'react-redux'
+import { selectorCurrentUser } from '~/redux/user/userSlice'
+
 function MobileMenu() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =React.useState(null)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -28,6 +31,7 @@ function MobileMenu() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget)
   }
+  const currentUser = useSelector(selectorCurrentUser)
   const renderMenu = (
     <Menu
       id="basic-menu-profiles"
@@ -46,7 +50,7 @@ function MobileMenu() {
         horizontal: 'right'
       }}
     >
-      <ProfileMenuContent />
+      <ProfileMenuContent currentUser={currentUser}/>
     </Menu>
   )
   const mobileMenuId = 'primary-search-account-menu-mobile'
@@ -89,9 +93,9 @@ function MobileMenu() {
             aria-expanded={open ? 'true' : undefined}
           >
             <Avatar
-              sx={{ width: 30, height: 30 }}
-              alt='Beautiful'
-              src='https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg'
+              sx={{ width: 36, height: 36 }}
+              alt={currentUser?.displayName}
+              src={currentUser?.avatar}
             />
           </IconButton>
           <Typography variant='body1' p={2}>Profile</Typography>
