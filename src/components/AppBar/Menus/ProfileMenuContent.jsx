@@ -11,7 +11,6 @@ import {
 import { useDispatch } from 'react-redux'
 import { useConfirm } from 'material-ui-confirm'
 import { Link } from 'react-router-dom'
-import AccountTab from '~/pages/Settings/AccountTab'
 
 function ProfileMenuContent({ currentUser, handleCloseMenu }) {
 
