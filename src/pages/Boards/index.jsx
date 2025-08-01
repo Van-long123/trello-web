@@ -61,14 +61,22 @@ function Boards() {
    */
   const page = parseInt(query.get('page') || '1', 10)
 
+  const updateData = (res) => {
+    setBoards(res.boards)
+    setTotalBoards(res.totalBoards)
+  }
   useEffect(() => {
     // Gọi API lấy danh sách boards
     fetchBoardsApi(location.search).then((res) => {
-      setBoards(res.boards)
-      setTotalBoards(res.totalBoards)
+      updateData(res)
     })
   }, [location.search]) // location.search thây đổi thì sẽ vào useEffect
 
+
+  const afterCreateNewBoard = () => {
+    // Đơn giản là cứ fetch lại danh sách board
+    fetchBoardsApi(location.search).then(updateData)
+  }
   // Lúc chưa tồn tại boards > đang chờ gọi api thì hiện loading
   if (!boards) {
     return <PageLoadingSpinner caption="Loading Boards..." />
@@ -96,7 +104,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal />
+              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard}/>
             </Stack>
           </Grid>
 
@@ -115,8 +123,8 @@ function Boards() {
                   <Grid xs={2} sm={3} md={4} key={b?._id}>
                     <Card sx={{ width: '250px' }}>
                       {/* Ý tưởng mở rộng về sau làm ảnh Cover cho board nhé */}
-                      <CardMedia component="img" height="100" image="https://picsum.photos/100" />
-                      {/* <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box> */}
+                      {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
+                      <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
 
                       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
                         <Typography gutterBottom variant="h6" component="div">

@@ -15,18 +15,21 @@ import {
   selectorCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 
 function Board() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   // Không dùng state của component nữa mà chuyển qua dùng state của redux
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectorCurrentActiveBoard)
   const { boardId }= useParams()
   useEffect(() => {
-    dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch, boardId])
+    dispatch(fetchBoardDetailsAPI(boardId)).then(res => {
+      if (res.error) navigate('/board-not-found', { replace: true })
+    })
+  }, [dispatch, boardId, navigate])
 
 
   // Func này có nhiệm vụ gọi API và xử lý khi kéo thả xong Column
