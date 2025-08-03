@@ -5,8 +5,6 @@ import VpnLockIcon from '@mui/icons-material/VpnLock'
 import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
@@ -92,7 +90,7 @@ function BoardBar({ board }) {
           >
             Invite
           </Button>
-          <BoardUserGroup />
+          <BoardUserGroup boardUsers={board.FE_allUser}/>
         </Box>
       </Box>
     </>
