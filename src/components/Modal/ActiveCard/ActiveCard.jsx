@@ -36,10 +36,8 @@ import { styled } from '@mui/material/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearCurrentActiveCard, selectCurrentActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 import {
-  updateCurrentActiveBoard,
-  selectorCurrentActiveBoard
+  updateCartInBoard
 } from '~/redux/activeBoard/activeBoardSlice'
-import { cloneDeep } from 'lodash'
 import { updateCardDetailsApi } from '~/apis'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
@@ -68,7 +66,6 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
-  const board = useSelector(selectorCurrentActiveBoard)
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
@@ -78,12 +75,11 @@ function ActiveCard() {
   // Function dùng chung cho các trường hợp update card title, description, cover, comment, ...
   const callApiUpdateCard = async (updateData) => {
     const updatedCard = await updateCardDetailsApi(activeCard._id, updateData)
-    console.log('🚀 ~ callApiUpdateCard ~ updatedCard:', updatedCard)
 
     // B1: Cập nhật lại cái card đang active trong redux
     dispatch(updateCurrentActiveCard(updatedCard))
-    // B2: Cập nhật lại cái bản ghi card trong cái activeBoard ở redux
-
+    // B2: Cập nhật lại cái bản ghi card trong cái activeBoard ở redux (nested-data)
+    dispatch(updateCartInBoard(updatedCard))
     return updatedCard
   }
 
@@ -91,8 +87,11 @@ function ActiveCard() {
     callApiUpdateCard({ title: newTitle.trim() })
   }
 
+  const onUpdateCardDescription = (newDescription) => {
+    callApiUpdateCard({ description: newDescription })
+  }
+
   const onUploadCardCover = (event) => {
-    console.log(event.target?.files[0])
     const error = singleFileValidator(event.target?.files[0])
     if (error) {
       toast.error(error)
@@ -102,6 +101,12 @@ function ActiveCard() {
     reqData.append('cardCover', event.target?.files[0])
 
     // Gọi API...
+    toast.promise(
+      callApiUpdateCard(reqData).finally(() => event.target.value = ''),
+      {
+        pending: 'Updating...'
+      }
+    )
   }
 
   return (
@@ -172,7 +177,10 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 03: Xử lý mô tả của Card */}
-              <CardDescriptionMdEditor />
+              <CardDescriptionMdEditor
+                cardDescriptionProp={activeCard?.description}
+                handleUpdateCardDescription={onUpdateCardDescription}
+              />
             </Box>
 
             <Box sx={{ mb: 3 }}>

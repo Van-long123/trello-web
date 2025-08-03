@@ -36,6 +36,24 @@ export const activeBoardSlice = createSlice({
 
       //Update lại dữ liệu của currentActiveBoard
       state.currentActiveBoard = board
+    },
+    updateCartInBoard: (state, action) => {
+      // update nested-data
+      const isComingCard = action.payload
+
+      // Tìm dần từ Board -> Column -> Card
+      const column = state.currentActiveBoard.columns.find(column => column._id === isComingCard.columnId)
+      if (column) {
+        const card = column.cards.find(card => card._id === isComingCard._id)
+        if (card) {
+          // card.title = isComingCard.title
+
+          // Cập nhật tất cả dữ liệu isComingCard vào
+          Object.keys(isComingCard).forEach(key => {
+            card[key] = isComingCard[key]
+          })
+        }
+      }
     }
   },
   // ExtraReducers: Nơi xử lý dữ liệu bất đồng bộ
@@ -44,6 +62,9 @@ export const activeBoardSlice = createSlice({
       .addCase(fetchBoardDetailsAPI.fulfilled, (state, action) => {
         // action.payload: là dữ liệu trả về từ API
         let board = action.payload
+
+        // Thành viên trong board sẽ là gộp lại từ owners và members
+        board.FE_allUser = board.owners.concat(board.members)
 
         //Xử lý dữ liệu nếu cần thiết
         // Sắp xếp thứ tự các column luôn ở đây trước khi đưa dữ liệu xuống bên dưới các component con
@@ -69,7 +90,7 @@ export const activeBoardSlice = createSlice({
 // Actions: Là nơi dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
 // Để ý ở trên thì không thấy properties actions đâu cả, bởi vì những cái actions này đơn giản là được thằng redux tạo
 // tự động theo tên của reducer nhé.
-export const { updateCurrentActiveBoard } = activeBoardSlice.actions
+export const { updateCurrentActiveBoard, updateCartInBoard } = activeBoardSlice.actions
 
 // Selectors: Là nơi dành cho các components bên dưới gọi bằng hook useSelector() để lấy dữ liệu từ trong kho redux store ra sử dụng
 export const selectorCurrentActiveBoard = (state) => {
