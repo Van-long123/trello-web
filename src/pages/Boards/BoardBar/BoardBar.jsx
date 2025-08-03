@@ -11,6 +11,8 @@ import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import BoardUserGroup from './BoardUserGroup'
+
 const MENU_STYLE = {
   color: 'white',
   backgroundColor: 'transparent',
@@ -90,83 +92,7 @@ function BoardBar({ board }) {
           >
             Invite
           </Button>
-          <AvatarGroup
-            max={7}
-            title='Anh Long'
-            sx={{
-              gap: '10px',
-              '& .MuiAvatar-root':{
-                width: '34px',
-                height: '34px',
-                fontSize: '16px',
-                border: 'none',
-                color: 'white',
-                cursor: 'pointer',
-                '&:first-of-type': { bgcolor: '#a4b0be' }
-              }
-            }}
-          >
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-            <Tooltip title="Anh Long">
-              <Avatar alt="Anh Long"
-                src="https://res.cloudinary.com/dm5pbyp9g/image/upload/v1740403545/vbqq0g8h7jzxglhmyd1z.jpg"
-              />
-            </Tooltip>
-          </AvatarGroup>
+          <BoardUserGroup />
         </Box>
       </Box>
     </>
