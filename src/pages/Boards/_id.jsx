@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import ActiveCard from '~/components/Modal/ActiveCard/ActiveCard'
-import { selectCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+// import { selectIsShowModalActiveCard } from '~/redux/activeCard/activeCardSlice'
 
 function Board() {
   const dispatch = useDispatch()
@@ -26,7 +26,7 @@ function Board() {
   // Không dùng state của component nữa mà chuyển qua dùng state của redux
   // const [board, setBoard] = useState(null)
   const board = useSelector(selectorCurrentActiveBoard)
-  const activeCard = useSelector(selectCurrentActiveCard)
+  // const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
   const { boardId }= useParams()
   useEffect(() => {
     dispatch(fetchBoardDetailsAPI(boardId)).then(res => {
@@ -95,10 +95,9 @@ function Board() {
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
-      {/* Modal Active Card, check đóng/mở dựa theo điều kiện có tồn tại data activeCard lưu trong
-      Redux hay không thì mới render. Mỗi thời điểm chỉ tồn tại một cái Modal Card đang Active */}
-      {activeCard && <ActiveCard />}
-      {/* <ActiveCard /> */}
+      {/* Modal Active Card, check đóng/mở dựa theo  isShowModalActiveCard lưu trong Redux. Mỗi thời điểm chỉ tồn tại một cái Modal Card đang Active */}
+      {/* {isShowModalActiveCard && <ActiveCard />} */}
+      <ActiveCard />
 
       {/* Các thành phần còn lại của Board Details */}
       <AppBar />
