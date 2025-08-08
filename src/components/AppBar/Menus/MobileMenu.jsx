@@ -6,13 +6,12 @@ import MoreIcon from '@mui/icons-material/MoreVert'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
-import Badge from '@mui/material/Badge'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import ProfileMenuContent from './ProfileMenuContent'
 import { useSelector } from 'react-redux'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
+import Notifications from '~/components/AppBar/Notifications/Notifications'
 
 function MobileMenu() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =React.useState(null)
@@ -101,12 +100,7 @@ function MobileMenu() {
           <Typography variant='body1' p={2}>Profile</Typography>
         </MenuItem>
         <MenuItem>
-          <Tooltip title="Notifications">
-            <Badge color="warning" variant="dot" sx={{ cursor: 'pointer' }}>
-              <NotificationsNoneIcon />
-            </Badge>
-          </Tooltip>
-          <Typography p= {2}>Notifications</Typography>
+          <Notifications/>
         </MenuItem>
         <MenuItem>
           <Tooltip title="Help" sx={{ cursor: 'pointer' }}>
