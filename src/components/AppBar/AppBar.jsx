@@ -109,7 +109,8 @@ function AppBar() {
           />
           {/* Dark - Light - System Modes */}
           <ModeSelect />
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
+          {/* <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}> */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
 
             <Notifications />
 
@@ -118,7 +119,7 @@ function AppBar() {
             </Tooltip>
             <Profiles />
           </Box>
-          <MobileMenu />
+          {/* <MobileMenu /> */}
         </Box>
       </Box>
     </>
