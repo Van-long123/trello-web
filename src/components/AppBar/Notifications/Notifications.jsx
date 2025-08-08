@@ -14,7 +14,15 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import DoneIcon from '@mui/icons-material/Done'
 import NotInterestedIcon from '@mui/icons-material/NotInterested'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchInvitationApi, selectorCurrentNotification, updateBoardInvitationApi } from '~/redux/notifications/notificationsSlice'
+import {
+  fetchInvitationApi,
+  selectorCurrentNotification,
+  updateBoardInvitationApi,
+  addNotification
+} from '~/redux/notifications/notificationsSlice'
+import { socketIoInstance } from '~/main'
+import { selectorCurrentUser } from '~/redux/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 
 const BOARD_INVITATION_STATUS = {
   PENDING: 'PENDING',
@@ -24,14 +32,24 @@ const BOARD_INVITATION_STATUS = {
 
 function Notifications() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const currentUser = useSelector(selectorCurrentUser)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClickNotificationIcon = (event) => {
     setAnchorEl(event.currentTarget)
+
+    // Khi click vào phần icon thông báo thì set lại trạng thái của biến newNotification về false
+    setNewNotification(false)
+    localStorage.setItem('newNotification', 'false')
   }
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  // Biến state để kiểm tra có thông báo mới hay ko
+  // localStorage.getItem('newNotification') trả về chuỗi nên === 'true' để trả về dạng boolean
+  const [newNotification, setNewNotification] = useState(localStorage.getItem('newNotification') === 'true')
 
   // Lấy dữ liệu notification trong redux
   const notifications = useSelector(selectorCurrentNotification)
@@ -39,12 +57,31 @@ function Notifications() {
   // Fetch danh sách các lời mời invitations
   useEffect(() => {
     dispatch(fetchInvitationApi())
-  }, [dispatch])
+    // Tạo một cái function xử lý khi nhận được sự kiện real-time : https://socket.io/how-to/use-with-react
+    const onReceiveNewInvitation = (invitation) => {
+      // Nếu thằng user đang đăng nhập hiện tại trong redux chính là thằng invitee trong bản ghi invitation
+      if (invitation.inviteeId === currentUser._id) {
+        // Thêm bản ghi invitation mới mới vào trong redux
+        dispatch(addNotification(invitation))
+        // Cập nhật trạng thái đang có thông báo đến
+        setNewNotification(true)
+        localStorage.setItem('newNotification', 'true')
+      }
+    }
+    // Lắng nghe sự kiện real-time BE_USER_INVITED_TO_BOARD
+    socketIoInstance.on('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+    // Clean sự kiện để ngăn chặn việc bị đăng ký lặp lại sự kiện
+    return () => {
+      socketIoInstance.off('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+    }
+  }, [dispatch, currentUser._id])
 
   // Cập nhật trạng thái - Status của một cái lời mời join board
   const updateBoardInvitation = (status, notificationId) => {
     dispatch(updateBoardInvitationApi({ status, notificationId })).then((res) => {
-      // console.log('🚀 ~ updateBoardInvitation ~ res:', res)
+      if (res.payload.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
+        navigate(`/boards/${res.payload.boardInvitation.boardId}`)
+      }
     })
   }
 
@@ -59,8 +96,7 @@ function Notifications() {
         <Tooltip title="Notifications">
           <Badge
             color="warning"
-            // variant="none"
-            variant="dot"
+            variant={newNotification ? 'dot' : 'none'}
             sx={{ cursor: 'pointer' }}
             id="basic-button-open-notification"
             aria-controls={open ? 'basic-notification-drop-down' : undefined}
@@ -68,17 +104,17 @@ function Notifications() {
             aria-expanded={open ? 'true' : undefined}
           >
             <NotificationsNoneIcon sx={{
-              color: {
-                xs: 'black', md: 'white'
-              }
-              // color: 'yellow'
+              // color: {
+              //   xs: 'black', md: newNotification ? 'yellow' : 'white'
+              // }
+              color: newNotification ? 'yellow' : 'white'
             }} />
           </Badge>
         </Tooltip>
         {
-          <Typography variant="body1" sx={{ mt: 0.5, ml: 2, display: { xs: 'block', md: 'none' } }}>
-            Notifications
-          </Typography>
+          // <Typography variant="body1" sx={{ mt: 0.5, ml: 2, display: { xs: 'block', md: 'none' } }}>
+          // Notifications
+          // </Typography>
         }
       </Box>
       <Menu

@@ -100,7 +100,7 @@ function MobileMenu() {
           <Typography variant='body1' p={2}>Profile</Typography>
         </MenuItem>
         <MenuItem>
-          <Notifications/>
+          {/* <Notifications/> */}
         </MenuItem>
         <MenuItem>
           <Tooltip title="Help" sx={{ cursor: 'pointer' }}>
