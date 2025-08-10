@@ -10,17 +10,14 @@ import Recent from './Menus/Recent'
 import Starred from './Menus/Starred'
 import Templates from './Menus/Templates'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
 import MobileMenu from './Menus/MobileMenu'
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
-import CloseIcon from '@mui/icons-material/Close'
 import { Link } from 'react-router-dom'
 import Notifications from '~/components/AppBar/Notifications/Notifications'
+import AutoCompleteSearchBoard from './SearchBoards/AutoCompleteSearchBoard'
 
 function AppBar() {
   const [searchValue, setSearchValue] = useState('')
@@ -70,43 +67,7 @@ function AppBar() {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
-          <TextField
-            id="outlined-search"
-            label="Search..."
-            type="text"
-            size='small'
-            variant='outlined'
-            value={searchValue}
-            onChange={(e) => (setSearchValue(e.target.value))}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'white' }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <CloseIcon
-                    fontSize='small'
-                    sx={{ color:searchValue ? 'white' : 'transparent', cursor: 'pointer' }}
-                    onClick={() => (setSearchValue(''))}
-                  />
-                </InputAdornment>
-              )
-            }}
-            sx={{
-              minWidth: '120px',
-              maxWidth: '170px',
-              '& label': { color: 'white' },
-              '& input': { color: 'white' },
-              '& label.Mui-focused': { color: 'white' },
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: 'white' },
-                '&:hover fieldset': { borderColor: 'white' },
-                '&.Mui-focused fieldset': { borderColor: 'white' }
-              }
-            }}
-          />
+          <AutoCompleteSearchBoard />
           {/* Dark - Light - System Modes */}
           <ModeSelect />
           {/* <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}> */}
