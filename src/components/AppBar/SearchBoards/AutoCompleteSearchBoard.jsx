@@ -51,7 +51,7 @@ function AutoCompleteSearchBoard() {
   const handleSelectedBoard = (event, selectedBoard) => {
     // Phải kiểm tra nếu tồn tại một cái board cụ thể được select thì mới gọi điều hướng - navigate
     if (selectedBoard) {
-      // navigate(`/boards/${selectedBoard._id}`)
+      navigate(`/boards/${selectedBoard._id}`)
     }
   }
 
