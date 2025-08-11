@@ -78,7 +78,7 @@ function AutoCompleteSearchBoard() {
 
       // Fix một cái warning của MUI, vì Autocomplete mặc định khi chúng ta chọn giá trị nó sẽ xảy ra sự so sánh object bên dưới, và mặc dù có 2 json objects trông như nhau trong JavaScript nhưng khi compare sẽ ra false. Vậy nên cần compare chuẩn với value dạng Primitive, ví dụ ở đây là dùng String _id thay vì compare toàn bộ cả cái json object board.
       // Link chi tiết: https://stackoverflow.com/a/65347275/8324172
-      // isOptionEqualToValue={(option, value) => option._id === value._id}
+      isOptionEqualToValue={(option, value) => option._id === value._id}
 
       loading={loading}
 
