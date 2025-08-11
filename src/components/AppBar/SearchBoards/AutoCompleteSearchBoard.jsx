@@ -31,11 +31,9 @@ function AutoCompleteSearchBoard() {
   const handleInputSearchChange = (event) => {
     const searchValue = event.target?.value
     if (!searchValue) return
-    console.log(searchValue)
 
     // Dùng createSearchParams của react-router-dom để tạo một cái searchPath chuẩn với q[title] để gọi lên API
     const searchPath = `?${createSearchParams({ 'q[title]': searchValue })}`
-    console.log(searchPath)
 
     setLoading(true)
     fetchBoardsApi(searchPath)
@@ -51,7 +49,6 @@ function AutoCompleteSearchBoard() {
   const debounceSearchHook = useDebounceFn(handleInputSearchChange, 1000)
   // Khi chúng ta select chọn một cái board cụ thể thì sẽ điều hướng tới board đó luôn
   const handleSelectedBoard = (event, selectedBoard) => {
-    console.log('🚀 ~ handleSelectedBoard ~ selectedBoard:', selectedBoard)
     // Phải kiểm tra nếu tồn tại một cái board cụ thể được select thì mới gọi điều hướng - navigate
     if (selectedBoard) {
       // navigate(`/boards/${selectedBoard._id}`)
