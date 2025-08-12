@@ -6,6 +6,7 @@ import SvgIcon from '@mui/material/SvgIcon'
 import { ReactComponent as PlanetSvg } from '~/assets/404/planet.svg'
 import { ReactComponent as AstronautSvg } from '~/assets/404/astronaut.svg'
 import { Link } from 'react-router-dom'
+import bgImage from '~/assets/404/particles.png'
 
 function NotFound() {
   return (
@@ -23,7 +24,7 @@ function NotFound() {
         animation: 'stars 12s linear infinite alternate',
         width: '100%',
         height: '100%',
-        backgroundImage: 'url("src/assets/404/particles.png")',
+        backgroundImage: `url(${bgImage})`,
         backgroundSize: 'contain',
         backgroundRepeat: 'repeat',
         backgroundPosition: 'center',
