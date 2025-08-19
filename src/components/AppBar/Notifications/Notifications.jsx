@@ -80,6 +80,7 @@ function Notifications() {
   const updateBoardInvitation = (status, notificationId) => {
     dispatch(updateBoardInvitationApi({ status, notificationId })).then((res) => {
       if (res.payload.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
+        socketIoInstance.emit('FE_USER_OF_BOARD', res.payload.inviterId)
         navigate(`/boards/${res.payload.boardInvitation.boardId}`)
       }
     })

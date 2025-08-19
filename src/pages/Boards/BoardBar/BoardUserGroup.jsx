@@ -1,14 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Tooltip from '@mui/material/Tooltip'
 import Popover from '@mui/material/Popover'
+import { socketIoInstance } from '~/socketClient'
+import { selectorCurrentUser } from '~/redux/user/userSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { fetchBoardDetailsAPI } from '~/redux/activeBoard/activeBoardSlice'
 
-function BoardUserGroup({ boardUsers = [], limit = 5 }) {
+function BoardUserGroup({ boardUsers = [], boardId, limit = 5 }) {
   /**
    * Xử lý Popover để ẩn hoặc hiện toàn bộ user trên một cái popup, tương tự docs để tham khảo ở đây:
    * https://mui.com/material-ui/react-popover/
    */
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const currentUser = useSelector(selectorCurrentUser)
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
   const isOpenPopover = Boolean(anchorPopoverElement)
   const popoverId = isOpenPopover ? 'board-all-users-popover' : undefined
@@ -16,6 +24,23 @@ function BoardUserGroup({ boardUsers = [], limit = 5 }) {
     if (!anchorPopoverElement) setAnchorPopoverElement(event.currentTarget)
     else setAnchorPopoverElement(null)
   }
+
+  useEffect(() => {
+    const newUserOfBoard = (inviterId) => {
+      console.log('🚀 ~ newUserOfBoard ~ inviterId:', inviterId)
+      if (inviterId === currentUser._id) {
+        console.log('🚀 ~ newUserOfBoard ~ inviterId === currentUser._id:', inviterId === currentUser._id)
+        dispatch(fetchBoardDetailsAPI(boardId)).then(res => {
+          console.log('🚀 ~ newUserOfBoard ~ res:', res)
+          if (res.error) navigate('/board-not-found', { replace: true })
+        })
+      }
+    }
+    socketIoInstance.on('BE_USER_OF_BOARD', newUserOfBoard)
+    return () => {
+      socketIoInstance.off('BE_USER_OF_BOARD', newUserOfBoard)
+    }
+  }, [dispatch, boardId, navigate, currentUser._id])
 
   return (
     <Box sx={{ display: 'flex', gap: '4px' }}>

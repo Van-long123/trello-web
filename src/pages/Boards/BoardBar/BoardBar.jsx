@@ -77,7 +77,7 @@ function BoardBar({ board }) {
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <InviteBoardUser boardId={board._id} />
-          <BoardUserGroup boardUsers={board.FE_allUser}/>
+          <BoardUserGroup boardUsers={board.FE_allUser} boardId={board._id}/>
         </Box>
       </Box>
     </>
