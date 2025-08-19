@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography'
 import { Card as MuiCard } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import { ReactComponent as TrelloIcon } from '~/assets/trello.svg'
+import { ReactComponent as Google } from '~/assets/auth/google.svg'
+import { ReactComponent as Facebook } from '~/assets/auth/facebook.svg'
 import CardActions from '@mui/material/CardActions'
 import TextField from '@mui/material/TextField'
 import Zoom from '@mui/material/Zoom'
@@ -23,6 +25,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { loginUserApi } from '~/redux/user/userSlice'
 import { toast } from 'react-toastify'
+import Divider from '@mui/material/Divider'
+import SvgIcon from '@mui/material/SvgIcon'
 
 function LoginForm() {
   const dispatch = useDispatch()
@@ -43,6 +47,14 @@ function LoginForm() {
       // Đoạn này phải kiểm tra không có lỗi thì mới redirect về route /
       if (!res.error) navigate('/')
     })
+  }
+
+  const handleGoogleLogin = () => {
+
+  }
+
+  const handleFacebookLogin = () => {
+
   }
 
   return (
@@ -134,10 +146,76 @@ function LoginForm() {
               color="primary"
               size="large"
               fullWidth
+              sx={{ paddingY: '10px', fontSize: '16px' }}
             >
               Login
             </Button>
           </CardActions>
+
+          {/* Divider với text "hoặc" */}
+          <Box sx={{ padding: '0 1em', marginBottom: '1em' }}>
+            <Divider sx={{
+              fontSize: '14px',
+              color: (theme) => theme.palette.grey[600]
+            }}>
+              Or continue with
+            </Divider>
+          </Box>
+
+          <Box sx={{ padding: '0 1em 1em 1em', display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Button
+              onClick={handleGoogleLogin}
+              variant="outlined"
+              color="inherit"
+              size="large"
+              fullWidth
+              startIcon={<SvgIcon component={Google} inheritViewBox fontSize="small" />}
+              sx={{
+                borderColor: theme => theme.palette.grey[400],
+                color: '#191919',
+                fontSize: '16px',
+                fontWeight: 400,
+                justifyContent: 'flex-start',
+                paddingY: '10px',
+                paddingLeft: '30px',
+                '&:hover': {
+                  borderColor: theme => theme.palette.grey[400],
+                  backgroundColor: theme => theme.palette.grey[50]
+                },
+                '& .MuiButton-startIcon': {
+                  marginRight: '15px'
+                }
+              }}
+            >
+              Continue with Google
+            </Button>
+            <Button
+              onClick={handleFacebookLogin}
+              variant="outlined"
+              color="inherit"
+              size="large"
+              fullWidth
+              startIcon={<SvgIcon component={Facebook} inheritViewBox fontSize="small" />}
+              sx={{
+                borderColor: theme => theme.palette.grey[400],
+                color: '#191919',
+                fontSize: '16px',
+                fontWeight: 400,
+                justifyContent: 'flex-start',
+                paddingY: '10px',
+                paddingLeft: '30px',
+                '&:hover': {
+                  borderColor: theme => theme.palette.grey[400],
+                  backgroundColor: theme => theme.palette.grey[50]
+                },
+                '& .MuiButton-startIcon': {
+                  marginRight: '15px'
+                }
+              }}
+            >
+              Continue with Facebook
+            </Button>
+          </Box>
           <Box sx={{ padding: '0 1em 1em 1em', textAlign: 'center' }}>
             <Typography>New to Trello MERN Stack Advanced?</Typography>
             <Link to="/register" style={{ textDecoration: 'none' }}>
