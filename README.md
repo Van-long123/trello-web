@@ -1,8 +1,8 @@
-# 🔄 Trello Web Clone
+# 📋 Trello Web Clone
 
 Ứng dụng web Trello mang đến trải nghiệm Kanban trực quan, mượt mà, giúp quản lý công việc dễ dàng với giao diện kéo thả sống động. Người dùng có thể tự do tạo và tùy chỉnh bảng, cột, và thẻ với đầy đủ chi tiết để theo dõi dự án một cách khoa học. Thiết kế thân thiện giúp ứng dụng trở thành công cụ lý tưởng cho cá nhân, đội nhóm, hoặc doanh nghiệp muốn tối ưu hóa hiệu suất và tổ chức công việc hiệu quả.
 
-## 📋 Tính năng chính
+## ✨ Tính năng chính
 
 - **🔐 Hệ thống xác thực toàn diện**:
 
