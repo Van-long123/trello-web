@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import Settings from '~/pages/Settings/Settings'
 import Boards from './pages/Boards'
+import LoginSuccess from './pages/Auth/LoginSuccess'
 
 const ProtectedRouter = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
@@ -44,6 +45,10 @@ function App() {
       <Route path='/login' element={<Auth />} />
       <Route path='/register' element={<Auth />} />
       <Route path='/account/verification' element={ <AccountVerification /> } />
+
+      {/* Google */}
+      <Route path='/login-success' element={ <LoginSuccess /> } />
+
     </Routes>
   )
 }

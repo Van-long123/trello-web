@@ -38,7 +38,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    //
+    setUser : (state, action) => {
+      state.currentUser = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(loginUserApi.fulfilled, (state, action) => {
@@ -58,6 +60,7 @@ export const userSlice = createSlice({
   }
 })
 
+export const { setUser } = userSlice.actions
 export const selectorCurrentUser = (state) => {
   return state.user.currentUser
 }
