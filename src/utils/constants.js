@@ -5,6 +5,7 @@ if (process.env.BUILD_MODE === 'dev') {
 if (process.env.BUILD_MODE === 'production') {
   apiRoot = 'https://trello-api-55yz.onrender.com'
 }
+
 export const API_ROOT = apiRoot
 
 export const DEFAULT_PAGE = 1

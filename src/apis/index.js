@@ -78,3 +78,8 @@ export const inviteUserToBoardToApi = async (data) => {
   toast.success('User invited to board successfully')
   return response.data
 }
+
+export const verifyGoogle = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify-google`, data)
+  return response.data
+}

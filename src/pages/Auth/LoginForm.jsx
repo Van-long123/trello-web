@@ -27,6 +27,7 @@ import { loginUserApi } from '~/redux/user/userSlice'
 import { toast } from 'react-toastify'
 import Divider from '@mui/material/Divider'
 import SvgIcon from '@mui/material/SvgIcon'
+import { API_ROOT } from '~/utils/constants'
 
 function LoginForm() {
   const dispatch = useDispatch()
@@ -50,7 +51,7 @@ function LoginForm() {
   }
 
   const handleGoogleLogin = () => {
-
+    window.location.href = `${API_ROOT}/v1/users/google`
   }
 
   const handleFacebookLogin = () => {
