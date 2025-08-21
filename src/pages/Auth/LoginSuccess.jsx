@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import { useDispatch } from 'react-redux'
 import { setUser } from '~/redux/user/userSlice'
-import { verifyGoogle } from '~/apis'
+import { verifyOAuth } from '~/apis'
 
 function LoginSuccess() {
   let [searchParams] = useSearchParams()
@@ -15,7 +15,7 @@ function LoginSuccess() {
       navigate('/login')
       return
     }
-    verifyGoogle({ id, token }).then((user) => {
+    verifyOAuth({ id, token }).then((user) => {
       dispatch(setUser(user))
       navigate('/boards')
     }).catch(() => navigate('/login'))
