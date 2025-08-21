@@ -79,7 +79,7 @@ export const inviteUserToBoardToApi = async (data) => {
   return response.data
 }
 
-export const verifyGoogle = async (data) => {
-  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify-google`, data)
+export const verifyOAuth = async (data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify-oauth`, data)
   return response.data
 }

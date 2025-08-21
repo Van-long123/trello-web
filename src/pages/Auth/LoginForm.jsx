@@ -55,7 +55,7 @@ function LoginForm() {
   }
 
   const handleFacebookLogin = () => {
-
+    window.location.href = `${API_ROOT}/v1/users/facebook`
   }
 
   return (
