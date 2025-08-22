@@ -29,6 +29,10 @@ function ListColumns({ columns }) {
       toast.error('Please enter Column Title')
       return
     }
+    if (newColumnTitle !== newColumnTitle.trim()) {
+      toast.error('The string must not contain leading or trailing spaces.')
+      return
+    }
     //  Gọi API tạo mới Column và làm lại dữ liệu State Board
     createNewColumnAPI({
       title: newColumnTitle,

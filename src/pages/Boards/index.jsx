@@ -14,7 +14,6 @@ import HomeIcon from '@mui/icons-material/Home'
 import ArrowRightIcon from '@mui/icons-material/ArrowRight'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
 import Pagination from '@mui/material/Pagination'
 import PaginationItem from '@mui/material/PaginationItem'
 import { Link, useLocation } from 'react-router-dom'
@@ -30,15 +29,15 @@ const SidebarItem = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: '8px',
   cursor: 'pointer',
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  backgroundColor: theme.palette.mode === 'dark' ? '#23262bff' : '#fff',
   padding: '12px 16px',
   borderRadius: '8px',
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#33485D' : theme.palette.grey[300]
+    backgroundColor: theme.palette.mode === 'dark' ? '#383c43ff' : theme.palette.grey[300]
   },
   '&.active': {
     color: theme.palette.mode === 'dark' ? '#90caf9' : '#0c66e4',
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#e9f2ff'
+    backgroundColor: theme.palette.mode === 'dark' ? '#23262bff' : '#e9f2ff'
   }
 }))
 
@@ -85,7 +84,12 @@ function Boards() {
   return (
     <Container disableGutters maxWidth={false}>
       <AppBar />
-      <Box sx={{ paddingX: 2, my: 4 }}>
+      <Box sx={{
+        padding: 3,
+        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : 'white'),
+        height: (theme) => theme.trello.boardsContentHeight,
+        width: '100%'
+      }}>
         <Grid container spacing={2}>
           <Grid xs={12} sm={3}>
             <Stack spacing={1}>
@@ -103,9 +107,7 @@ function Boards() {
               </SidebarItem>
             </Stack>
             <Divider sx={{ my: 1 }} />
-            <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard}/>
-            </Stack>
+            <SidebarCreateBoardModal afterCreateNewBoard={afterCreateNewBoard}/>
           </Grid>
 
           <Grid xs={12} sm={9}>
@@ -126,7 +128,7 @@ function Boards() {
                       {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
                       <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
 
-                      <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
+                      <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 }, bgcolor: (theme) => theme.palette.mode === 'dark' ? '#23262bff' : 'white' }}>
                         <Typography gutterBottom variant="h6" component="div">
                           {b?.title}
                         </Typography>
@@ -145,6 +147,7 @@ function Boards() {
                             alignItems: 'center',
                             justifyContent: 'flex-end',
                             color: 'primary.main',
+
                             '&:hover': { color: 'primary.light' }
                           }}>
                           Go to board <ArrowRightIcon fontSize="small" />

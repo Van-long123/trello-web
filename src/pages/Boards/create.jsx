@@ -1,54 +1,17 @@
 import { useState } from 'react'
-import Box from '@mui/material/Box'
-import Modal from '@mui/material/Modal'
-import Typography from '@mui/material/Typography'
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import CancelIcon from '@mui/icons-material/Cancel'
-import { useForm, Controller } from 'react-hook-form'
-import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import { FIELD_REQUIRED_MESSAGE } from '~/utils/validators'
-import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
-import AbcIcon from '@mui/icons-material/Abc'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
-import Button from '@mui/material/Button'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import { styled } from '@mui/material/styles'
+import { useForm } from 'react-hook-form'
 import { createNewBoardApi } from '~/apis'
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
+import { FIELD_REQUIRED_MESSAGE } from '~/utils/validators'
+import '~/assets/board/style.css'
+import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 
-const SidebarItem = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  cursor: 'pointer',
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  padding: '12px 16px',
-  borderRadius: '8px',
-  '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#33485D' : theme.palette.grey[300]
-  },
-  '&.active': {
-    color: theme.palette.mode === 'dark' ? '#90caf9' : '#0c66e4',
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#e9f2ff'
-  }
-}))
-
-// BOARD_TYPES tương tự bên model phía Back-end (nếu cần dùng nhiều nơi thì hãy đưa ra file constants, không thì cứ để ở đây)
-const BOARD_TYPES = {
-  PUBLIC: 'public',
-  PRIVATE: 'private'
-}
-
-/**
- * Bản chất của cái component SidebarCreateBoardModal này chúng ta sẽ trả về một cái SidebarItem để hiển thị ở màn Board List cho phù hợp giao diện bên đó, đồng thời nó cũng chứa thêm một cái Modal để xử lý riêng form create board nhé.
- * Note: Modal là một low-component mà bọn MUI sử dụng bên trong những thứ như Dialog, Drawer, Menu, Popover. Ở đây dĩ nhiên chúng ta có thể sử dụng Dialog cũng không thành vấn đề gì, nhưng sẽ sử dụng Modal để dễ linh hoạt tùy biến giao diện từ con số 0 cho phù hợp với mọi nhu cầu nhé.
- */
 function SidebarCreateBoardModal({ afterCreateNewBoard }) {
-  const { control, register, handleSubmit, reset, formState: { errors } } = useForm()
-
+  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm()
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedBackground, setSelectedBackground] = useState(null)
   const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
     setIsOpen(false)
@@ -56,155 +19,157 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
     reset()
   }
 
-
-  const submitCreateNewBoard = (data) => {
-    createNewBoardApi(data).then(() => {
-      handleCloseModal()
-      // Gọi đến component cha để xử lý
-      afterCreateNewBoard()
-    })
+  const handleImageUpload = (e) => {
+    const file=e.target.files[0]
+    if (file) {
+      setSelectedBackground(URL.createObjectURL(file))
+      // Gọi lại onChange mặc định của react-hook-form để cập nhật value
+      register('backgroundImage').onChange(e)
+    }
   }
 
-  // <>...</> nhắc lại cho bạn anof chưa biết hoặc quên nhé: nó là React Fragment, dùng để bọc các phần tử lại mà không cần chỉ định DOM Node cụ thể nào cả.
+  const submitCreateNewBoard = (data) => {
+    console.log('🚀 ~ submitCreateNewBoard ~ data:', data)
+    // createNewBoardApi(data).then(() => {
+    //   handleCloseModal()
+    //   // Gọi đến component cha để xử lý
+    //   afterCreateNewBoard()
+    // })
+  }
+
+
+  const SidebarItem = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer',
+    backgroundColor: theme.palette.mode === 'dark' ? '#23262bff' : '#fff',
+    padding: '12px 16px',
+    borderRadius: '8px',
+    '&:hover': {
+      backgroundColor: theme.palette.mode === 'dark' ? '#383c43ff' : theme.palette.grey[300]
+    },
+    '&.active': {
+      color: theme.palette.mode === 'dark' ? '#90caf9' : '#0c66e4',
+      backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#e9f2ff'
+    }
+  }))
+
   return (
     <>
       <SidebarItem onClick={handleOpenModal}>
         <LibraryAddIcon fontSize="small" />
         Create a new board
       </SidebarItem>
+      <div id="createBoardModal" className={`${!isOpen ? 'hidden' :''} modal-overlay`}>
+        <div className='modal glass-morphism'>
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3 className="modal-title">Create a new board</h3>
+              <button
+                onClick={handleCloseModal}
+                className="modal-close"
+              >
+                ✕
+              </button>
+            </div>
 
-      <Modal
-        open={isOpen}
-        // onClose={handleCloseModal} // chỉ sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 600,
-          bgcolor: 'white',
-          boxShadow: 24,
-          borderRadius: '8px',
-          border: 'none',
-          outline: 0,
-          padding: '20px 30px',
-          backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : 'white'
-        }}>
-          <Box sx={{
-            position: 'absolute',
-            top: '10px',
-            right: '10px',
-            cursor: 'pointer'
-          }}>
-            <CancelIcon
-              color="error"
-              sx={{ '&:hover': { color: 'error.light' } }}
-              onClick={handleCloseModal} />
-          </Box>
-          <Box id="modal-modal-title" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <LibraryAddIcon />
-            <Typography variant="h6" component="h2"> Create a new board</Typography>
-          </Box>
-          <Box id="modal-modal-description" sx={{ my: 2 }}>
             <form onSubmit={handleSubmit(submitCreateNewBoard)}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box>
-                  <TextField
-                    fullWidth
-                    label="Title"
-                    type="text"
-                    variant="outlined"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <AbcIcon fontSize="small" />
-                        </InputAdornment>
-                      )
-                    }}
-                    {...register('title', {
-                      required: FIELD_REQUIRED_MESSAGE,
-                      minLength: { value: 3, message: 'Min Length is 3 characters' },
-                      maxLength: { value: 50, message: 'Max Length is 50 characters' }
-                    })}
-                    error={!!errors['title']}
-                  />
-                  <FieldErrorAlert errors={errors} fieldName={'title'} />
-                </Box>
-
-                <Box>
-                  <TextField
-                    fullWidth
-                    label="Description"
-                    type="text"
-                    variant="outlined"
-                    multiline
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <DescriptionOutlinedIcon fontSize="small" />
-                        </InputAdornment>
-                      )
-                    }}
-                    {...register('description', {
-                      required: FIELD_REQUIRED_MESSAGE,
-                      minLength: { value: 3, message: 'Min Length is 3 characters' },
-                      maxLength: { value: 255, message: 'Max Length is 255 characters' }
-                    })}
-                    error={!!errors['description']}
-                  />
-                  <FieldErrorAlert errors={errors} fieldName={'description'} />
-                </Box>
-
-                {/*
-                  * Lưu ý đối với RadioGroup của MUI thì không thể dùng register tương tự TextField được mà phải sử dụng <Controller /> và props "control" của react-hook-form như cách làm dưới đây
-                  * https://stackoverflow.com/a/73336101
-                  * https://mui.com/material-ui/react-radio-button/
-                */}
-                <Controller
-                  name="type"
-                  defaultValue={BOARD_TYPES.PUBLIC}
-                  control={control}
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      row
-                      onChange={(event, value) => field.onChange(value)}
-                      value={field.value}
-                    >
-                      <FormControlLabel
-                        value={BOARD_TYPES.PUBLIC}
-                        control={<Radio size="small" />}
-                        label="Public"
-                        labelPlacement="start"
-                      />
-                      <FormControlLabel
-                        value={BOARD_TYPES.PRIVATE}
-                        control={<Radio size="small" />}
-                        label="Private"
-                        labelPlacement="start"
-                      />
-                    </RadioGroup>
-                  )}
+              <div className="form-group">
+                <label className="form-label">Title</label>
+                <input
+                  type="text"
+                  placeholder="Enter board name..."
+                  className="form-input glass-morphism"
+                  {...register('title', {
+                    required: FIELD_REQUIRED_MESSAGE,
+                    minLength: { value: 3, message: 'Min Length is 3 characters' },
+                    maxLength: { value: 50, message: 'Max Length is 50 characters' }
+                  })}
                 />
+                <FieldErrorAlert errors={errors} fieldName={'title'} />
+              </div>
 
-                <Box sx={{ alignSelf: 'flex-end' }}>
-                  <Button
-                    className="interceptor-loading"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Create
-                  </Button>
-                </Box>
-              </Box>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea
+                  placeholder="Short description of the board..."
+                  rows="3"
+                  className="form-textarea glass-morphism"
+                  {...register('description', {
+                    required: FIELD_REQUIRED_MESSAGE,
+                    minLength: { value: 3, message: 'Min Length is 3 characters' },
+                    maxLength: { value: 255, message: 'Max Length is 255 characters' }
+                  })}
+                />
+                <FieldErrorAlert errors={errors} fieldName={'description'} />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Background image</label>
+                <div className="background-section">
+                  {/* Upload from computer option */}
+                  <div className="upload-section">
+                    <input
+                      type="file"
+                      id="imageUpload"
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      {...register('backgroundImage', {
+                        required: 'Background image is required',
+                        validate: {
+                          isFileChosen: (files) =>
+                            files && files.length > 0 || 'You must select an image'
+                        }
+                      })}
+                      onChange={handleImageUpload}
+                    />
+                    <button
+                      type="button"
+                      className="upload-btn glass-morphism"
+                      onClick={() =>
+                        document.getElementById('imageUpload').click()
+                      }
+                    >
+                      <span className="upload-icon">📁</span>
+                      <span className="upload-text">Select photo from device</span>
+                    </button>
+                    <FieldErrorAlert errors={errors} fieldName={'backgroundImage'} />
+                  </div>
+                </div>
+              </div>
+              {selectedBackground &&
+              <div className="background-option">
+                <img className="background-image" src={selectedBackground} />
+              </div>
+              }
+              <div className="form-group">
+                <label className="form-label">Privacy</label>
+                <div className="privacy-toggle">
+                  <label className="ios-switch">
+                    <input type="checkbox" id="privateToggle" {...register('isPrivate')} />
+                    <span className="ios-slider"></span>
+                  </label>
+                  <span className="privacy-label">Private Board</span>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="btn-cancel glass-morphism"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="btn-submit ripple-effect">
+                  Create Board
+                </button>
+              </div>
             </form>
-          </Box>
-        </Box>
-      </Modal>
+          </div>
+        </div>
+      </div>
     </>
   )
 }

@@ -65,7 +65,10 @@ function Column({ column }) {
       toast.error('Please enter Card Title')
       return
     }
-
+    if (newCardTitle !== newCardTitle.trim()) {
+      toast.error('The string must not contain leading or trailing spaces.')
+      return
+    }
     //Tạo dữ liệu card để gọi API
     const newCardData = {
       title: newCardTitle,
