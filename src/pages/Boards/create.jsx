@@ -4,9 +4,10 @@ import { createNewBoardApi } from '~/apis'
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import { FIELD_REQUIRED_MESSAGE } from '~/utils/validators'
+import { FIELD_REQUIRED_MESSAGE, singleFileValidator } from '~/utils/validators'
 import '~/assets/board/style.css'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
+import { toast } from 'react-toastify'
 
 function SidebarCreateBoardModal({ afterCreateNewBoard }) {
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm()
@@ -15,6 +16,7 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
   const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
     setIsOpen(false)
+    setSelectedBackground(null)
     // Reset lại toàn bộ form khi đóng Modal
     reset()
   }
@@ -29,12 +31,31 @@ function SidebarCreateBoardModal({ afterCreateNewBoard }) {
   }
 
   const submitCreateNewBoard = (data) => {
-    console.log('🚀 ~ submitCreateNewBoard ~ data:', data)
-    // createNewBoardApi(data).then(() => {
-    //   handleCloseModal()
-    //   // Gọi đến component cha để xử lý
-    //   afterCreateNewBoard()
-    // })
+    const error = singleFileValidator(data.backgroundImage[0])
+    if (error) {
+      toast.error(error)
+      return
+    }
+
+    let reqData = new FormData()
+    reqData.append('background', data.backgroundImage[0])
+    reqData.append('title', data.title)
+    reqData.append('description', data.description)
+    reqData.append('type', data.isPrivate ? 'private' : 'public')
+    toast.promise(
+      createNewBoardApi(reqData),
+      {
+        pending: 'Updating...'
+      }
+    ).then((res) => {
+      if (!res.error) {
+        handleCloseModal()
+        // Gọi đến component cha để xử lý
+        afterCreateNewBoard()
+        toast.success('Board created successfully')
+      }
+    })
+
   }
 
 

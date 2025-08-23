@@ -22,6 +22,7 @@ import SidebarCreateBoardModal from './create'
 import { styled } from '@mui/material/styles'
 import { fetchBoardsApi } from '~/apis'
 import { DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
+import { CardMedia } from '@mui/material'
 
 // Styles của mấy cái Sidebar item menu.
 const SidebarItem = styled(Box)(({ theme }) => ({
@@ -124,9 +125,9 @@ function Boards() {
                 {boards.map(b =>
                   <Grid xs={2} sm={3} md={4} key={b?._id}>
                     <Card sx={{ width: '250px' }}>
-                      {/* Ý tưởng mở rộng về sau làm ảnh Cover cho board nhé */}
-                      {/* <CardMedia component="img" height="100" image="https://picsum.photos/100" /> */}
-                      <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box>
+                      {/* Ý tưởng mở rộng về sau làm ảnh Cover cho board */}
+                      <CardMedia component="img" height="100" image={b.background}/>
+                      {/* <Box sx={{ height: '50px', backgroundColor: randomColor() }}></Box> */}
 
                       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 }, bgcolor: (theme) => theme.palette.mode === 'dark' ? '#23262bff' : 'white' }}>
                         <Typography gutterBottom variant="h6" component="div">
