@@ -1,6 +1,7 @@
 import '~/assets/css/loading/loading.css'
 
 function PageLoadingSpinner({ caption }) {
+
   return (
     <>
       <div className="main">

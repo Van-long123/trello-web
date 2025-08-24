@@ -24,7 +24,7 @@ function AccountVerification() {
 
   // Nếu chưa verify xong thì hiện loading
   if (!verified) {
-    return <PageLoadingSpinner caption='Verifying your account...'/>
+    return <PageLoadingSpinner caption='Verifying your account'/>
   }
   // Cuối cùng nếu không gặp vấn đề gì + với verify thành công thì điều hướng về trang login cùng giá trị verifiedEmail
   // Muốn dùng đc `` thì bỏ vào {}

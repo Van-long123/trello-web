@@ -22,6 +22,6 @@ function LoginSuccess() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <PageLoadingSpinner caption='Loading...'/>
+  return <PageLoadingSpinner caption='Loading'/>
 }
 export default LoginSuccess

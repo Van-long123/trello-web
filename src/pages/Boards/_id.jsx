@@ -91,7 +91,7 @@ function Board() {
   }
 
   if (!board) {
-    return <PageLoadingSpinner caption='Loading Board...'/>
+    return <PageLoadingSpinner caption='Loading Board'/>
   }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
