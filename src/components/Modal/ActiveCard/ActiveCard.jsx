@@ -40,6 +40,7 @@ import {
 import { updateCardDetailsApi } from '~/apis'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTION } from '~/utils/constants'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -227,6 +228,15 @@ function ActiveCard() {
                 >
                   <PersonOutlineOutlinedIcon fontSize="small" />
                   Join
+                </SidebarItem>
+              }
+              {activeCard?.memberIds?.includes(currentUser._id) &&
+                <SidebarItem
+                  className="active"
+                  onClick={() => onUpdateCardMembers({ userId: currentUser._id, action: CARD_MEMBER_ACTION.REMOVE })}
+                >
+                  <LogoutIcon fontSize="small" />
+                  Leave
                 </SidebarItem>
               }
               {/* Feature 06: Xử lý hành động cập nhật ảnh Cover của Card */}
