@@ -5,7 +5,7 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { FIELD_REQUIRED_MESSAGE, singleFileValidator } from '~/utils/validators'
-import '~/assets/board/style.css'
+import '~/assets/css/board/style.css'
 import FieldErrorAlert from '~/components/Form/FieldErrorAlert'
 import { toast } from 'react-toastify'
 
