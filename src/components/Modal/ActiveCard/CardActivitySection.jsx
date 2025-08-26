@@ -4,12 +4,21 @@ import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'
 
 import { useSelector } from 'react-redux'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
+import { IconButton, Popover } from '@mui/material'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
+import 'emoji-picker-element'
 
-function CardActivitySection({ cardComments = [], onAddCardComment }) {
+function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCardComment, onDeleteCardComment }) {
   const currentUser = useSelector(selectorCurrentUser)
+  const [editingId, setEditingId] = useState(null)
+  const [editContent, setEditContent] = useState('')
+  const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
+  const isOpenPopover = Boolean(anchorPopoverElement)
 
   const handleAddCardComment = (event) => {
     // Bắt hành động người dùng nhấn phím Enter && không phải hành động Shift + Enter
@@ -27,6 +36,33 @@ function CardActivitySection({ cardComments = [], onAddCardComment }) {
         event.target.value=''
       })
     }
+  }
+
+  const handleUpdateCardComment = (event, idEdited) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      if (!event.target?.value) return // Nếu không có giá trị gì thì return không làm gì cả
+
+      // Tạo một biến comment data để gửi api
+      const commentToUpdate = {
+        content: event.target.value.trim(),
+        commentedAt: idEdited
+      }
+      onUpdateCardComment(commentToUpdate).then(() => {
+        toast.success('Comment updated successfully!')
+        setEditingId(null)
+      })
+    }
+  }
+
+  const handleDeleteCardComment = (idEdited) => {
+    onDeleteCardComment({ commentedAt: idEdited }).then(() => {
+      toast.success('Comment deleted successfully!')
+    })
+  }
+
+  const handleEmojiClick = event => {
+    console.log('🚀 ~ handleEmojiClick ~ event:', event)
   }
 
   return (
@@ -48,6 +84,21 @@ function CardActivitySection({ cardComments = [], onAddCardComment }) {
         />
       </Box>
 
+      <Popover
+        open={isOpenPopover}
+        anchorEl={anchorPopoverElement}
+        onClose={() => setAnchorPopoverElement(null)}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center'
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+      >
+        <emoji-picker onEmojiClick={handleEmojiClick}></emoji-picker>
+      </Popover>
       {/* Hiển thị danh sách các comments */}
       {cardComments.length === 0 &&
         <Typography sx={{ pl: '45px', fontSize: '14px', fontWeight: '500', color: '#b1b1b1' }}>No activity found!</Typography>
@@ -69,17 +120,67 @@ function CardActivitySection({ cardComments = [], onAddCardComment }) {
             <Typography variant="span" sx={{ fontSize: '12px' }}>
               {moment(comment.commentedAt).format('llll')}
             </Typography>
-
-            <Box sx={{
-              display: 'block',
-              bgcolor: (theme) => theme.palette.mode === 'dark' ? '#33485D' : 'white',
-              p: '8px 12px',
-              mt: '4px',
-              border: '0.5px solid rgba(0, 0, 0, 0.2)',
-              borderRadius: '4px',
-              boxShadow: '0 0 1px rgba(0, 0, 0, 0.2)'
-            }}>
-              {comment.content}
+            {editingId === comment.commentedAt
+              ?<TextField
+                fullWidth
+                type="text"
+                variant="outlined"
+                value={editContent}
+                onChange={(e) => {
+                  setEditContent(e.target.value)
+                }}
+                onKeyDown={(e) => { handleUpdateCardComment(e, comment.commentedAt) }}
+                sx={{
+                  '& .MuiInputBase-input': { padding: '13px' }
+                }}
+              />
+              :<TextField
+                fullWidth
+                disabled
+                type="text"
+                variant="outlined"
+                value={comment.content}
+                sx={{
+                  '& .MuiInputBase-input': { padding: '13px' },
+                  '& .Mui-disabled': {
+                    WebkitTextFillColor: '#000' // màu chữ khi disabled
+                  }
+                }}
+              />
+            }
+            {/* Dòng action dưới comment */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5, pl: 1 }}>
+              <IconButton size="small" sx={{
+                width: '34px',
+                height: '24px',
+                border: '1px solid #091e4224',
+                borderRadius: '12px',
+                fontSize: '16px',
+                marginBottom: '2px'
+              }}
+              onClick={(e) => {
+                setAnchorPopoverElement(e.currentTarget)
+              }}
+              >
+                <EmojiEmotionsIcon fontSize="inherit" />
+              </IconButton>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
+                onClick={() => {
+                  setEditingId(comment.commentedAt)
+                  setEditContent(comment.content)
+                }}
+              >
+                Chỉnh sửa
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
+                onClick={() => handleDeleteCardComment(comment.commentedAt)}
+              >
+                Xoá
+              </Typography>
             </Box>
           </Box>
         </Box>
