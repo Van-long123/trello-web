@@ -70,7 +70,6 @@ function ActiveCard() {
   const activeCard = useSelector(selectCurrentActiveCard)
   const currentUser = useSelector(selectorCurrentUser)
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
-
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
@@ -80,6 +79,7 @@ function ActiveCard() {
   // Function dùng chung cho các trường hợp update card title, description, cover, comment, ...
   const callApiUpdateCard = async (updateData) => {
     const updatedCard = await updateCardDetailsApi(activeCard._id, updateData)
+    console.log('🚀 ~ callApiUpdateCard ~ updatedCard:', updatedCard)
 
     // B1: Cập nhật lại cái card đang active trong redux
     dispatch(updateCurrentActiveCard(updatedCard))
@@ -125,6 +125,7 @@ function ActiveCard() {
     await callApiUpdateCard({ commentToUpdate })
   }
 
+
   const onDeleteCardComment = async (commentToDelete) => {
     await callApiUpdateCard({ commentToDelete })
   }
@@ -132,6 +133,11 @@ function ActiveCard() {
   const onUpdateCardMembers = (incomingMemberInfo) => {
     callApiUpdateCard({ incomingMemberInfo })
   }
+
+  const onUpdateCardCommentReactions = async (commentReactionsToUpdate) => {
+    callApiUpdateCard({ commentReactionsToUpdate })
+  }
+
   return (
     <Modal
       disableScrollLock
@@ -221,6 +227,7 @@ function ActiveCard() {
                 onAddCardComment= {onAddCardComment}
                 onUpdateCardComment= {onUpdateCardComment}
                 onDeleteCardComment= {onDeleteCardComment}
+                onUpdateCardCommentReactions= {onUpdateCardCommentReactions}
               />
             </Box>
           </Grid>

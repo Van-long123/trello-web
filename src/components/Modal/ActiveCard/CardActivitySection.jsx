@@ -9,16 +9,18 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'
 import { useSelector } from 'react-redux'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import { IconButton, Popover } from '@mui/material'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import 'emoji-picker-element'
 
-function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCardComment, onDeleteCardComment }) {
+
+function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCardComment, onDeleteCardComment, onUpdateCardCommentReactions }) {
   const currentUser = useSelector(selectorCurrentUser)
   const [editingId, setEditingId] = useState(null)
   const [editContent, setEditContent] = useState('')
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
   const isOpenPopover = Boolean(anchorPopoverElement)
+  const pickerRef = useRef(null)
 
   const handleAddCardComment = (event) => {
     // Bắt hành động người dùng nhấn phím Enter && không phải hành động Shift + Enter
@@ -61,8 +63,41 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
     })
   }
 
-  const handleEmojiClick = event => {
-    console.log('🚀 ~ handleEmojiClick ~ event:', event)
+  const handleEmojiSelect = (unicode, editingId) => {
+    // setComments(prevComments =>
+    //   prevComments.map(comment => {
+    //     if (comment.commentedAt !== commentId) return comment
+    //     const existing = comment.reactions?.find(r => r.emoji === e.detail.unicode)
+    //     if (existing) {
+    //       return {
+    //         ...comment,
+    //         reactions: comment.reactions.map(r => {
+    //           return r.emoji === e.detail.unicode ? { ...r, count: r.count + 1 } : r
+    //         })
+    //       }
+    //     }
+    //     else {
+    //       return {
+    //         ...comment,
+    //         reactions: [
+    //           ...comment.reactions,
+    //           {
+    //             emoji: e.detail.unicode, count: 1
+    //           }
+    //         ]
+    //       }
+    //     }
+    //   })
+    // )
+
+    // Tạo một biến comment data để gửi api
+    const commentReactionsToUpdate = {
+      emoji: unicode,
+      commentedAt: editingId
+    }
+    onUpdateCardCommentReactions(commentReactionsToUpdate).then(() => {
+      setAnchorPopoverElement(null)
+    })
   }
 
   return (
@@ -92,12 +127,26 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
           vertical: 'top',
           horizontal: 'center'
         }}
+        TransitionProps={{
+          onEntered: () => {
+            const element = pickerRef.current
+            if (element) {
+              element.addEventListener('emoji-click', (e) => { handleEmojiSelect(e.detail.unicode, editingId) })
+            }
+          },
+          onExit: () => {
+            const element = pickerRef.current
+            if (element) {
+              // element.removeEventListener('emoji-click', handleEmojiSelect)
+            }
+          }
+        }}
         transformOrigin={{
           vertical: 'bottom',
           horizontal: 'left'
         }}
       >
-        <emoji-picker onEmojiClick={handleEmojiClick}></emoji-picker>
+        <emoji-picker ref={pickerRef}></emoji-picker>
       </Popover>
       {/* Hiển thị danh sách các comments */}
       {cardComments.length === 0 &&
@@ -143,13 +192,36 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
                 sx={{
                   '& .MuiInputBase-input': { padding: '13px' },
                   '& .Mui-disabled': {
-                    WebkitTextFillColor: '#000' // màu chữ khi disabled
+                    WebkitTextFillColor: '#514b4bff !important' // màu chữ khi disabled
                   }
                 }}
               />
             }
             {/* Dòng action dưới comment */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5, pl: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5, pl: 1, flexWrap: 'wrap' }}>
+              {comment.reactions?.map((reaction, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '2px',
+                    gap: '0px',
+                    width: '40px',
+                    height: '25px',
+                    border: '1px solid #ccc',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    '&:hover': { backgroundColor: '#f0f0f0' }
+                  }}
+                  onClick={() => { handleEmojiSelect(reaction.emoji, comment.commentedAt) }
+                  }
+                >
+                  <span style={{ fontSize: '16px' }}>{reaction?.emoji}</span>
+                  <Typography variant='span' sx={{ fontSize: '12px', fontWeight: '500', marginTop: '2px', color: '#44546f' }}>{reaction?.count}</Typography>
+                </Box>
+              ))}
               <IconButton size="small" sx={{
                 width: '34px',
                 height: '24px',
@@ -160,6 +232,7 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
               }}
               onClick={(e) => {
                 setAnchorPopoverElement(e.currentTarget)
+                setEditingId(comment.commentedAt)
               }}
               >
                 <EmojiEmotionsIcon fontSize="inherit" />
