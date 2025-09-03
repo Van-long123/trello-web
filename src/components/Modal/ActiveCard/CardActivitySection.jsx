@@ -150,7 +150,7 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
       </Popover>
       {/* Hiển thị danh sách các comments */}
       {cardComments.length === 0 &&
-        <Typography sx={{ pl: '45px', fontSize: '14px', fontWeight: '500', color: '#b1b1b1' }}>No activity found!</Typography>
+        <Typography sx={{ pl: '45px', fontSize: '14px', fontWeight: '500', color: '#b1b1b1' }}>No comments found!</Typography>
       }
       {cardComments.map((comment, index) =>
         <Box sx={{ display: 'flex', gap: 1, width: '100%', mb: 1.5 }} key={index}>

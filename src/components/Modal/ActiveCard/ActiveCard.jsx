@@ -10,7 +10,6 @@ import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined'
-import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined'
 import AspectRatioOutlinedIcon from '@mui/icons-material/AspectRatioOutlined'
@@ -23,7 +22,7 @@ import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined'
 import SubjectRoundedIcon from '@mui/icons-material/SubjectRounded'
 import DvrOutlinedIcon from '@mui/icons-material/DvrOutlined'
-
+import AttachmentIcon from '@mui/icons-material/Attachment'
 import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 import VisuallyHiddenInput from '~/components/Form/VisuallyHiddenInput'
 import { singleFileValidator } from '~/utils/validators'
@@ -37,10 +36,12 @@ import { clearAndHideCurrentActiveCard, selectCurrentActiveCard, updateCurrentAc
 import {
   updateCartInBoard
 } from '~/redux/activeBoard/activeBoardSlice'
-import { updateCardDetailsApi } from '~/apis'
+import { updateCardDetailsApi, createAttachInCardApi } from '~/apis'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTION } from '~/utils/constants'
 import LogoutIcon from '@mui/icons-material/Logout'
+import CardAttachment from './CardAttachment'
+import AttachmentList from './AttachmentList'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -79,7 +80,6 @@ function ActiveCard() {
   // Function dùng chung cho các trường hợp update card title, description, cover, comment, ...
   const callApiUpdateCard = async (updateData) => {
     const updatedCard = await updateCardDetailsApi(activeCard._id, updateData)
-    console.log('🚀 ~ callApiUpdateCard ~ updatedCard:', updatedCard)
 
     // B1: Cập nhật lại cái card đang active trong redux
     dispatch(updateCurrentActiveCard(updatedCard))
@@ -113,6 +113,27 @@ function ActiveCard() {
       }
     )
   }
+
+  const callApiCreateAttachInCard = async (updateData) => {
+    const updatedCard = await createAttachInCardApi(activeCard._id, updateData)
+    dispatch(updateCurrentActiveCard(updatedCard))
+    dispatch(updateCartInBoard(updatedCard))
+    return updatedCard
+  }
+  const onUploadAttach = async (event) => {
+    const file = event.target?.files[0]
+    let reqData = new FormData()
+    reqData.append('fileName', file.name)
+    reqData.append('fileType', file.type)
+    reqData.append('file', file)
+
+    return toast.promise(
+      callApiCreateAttachInCard(reqData).finally(() => event.target.value = ''),
+      {
+        pending: 'Updating...'
+      }
+    )
+  }
   // console.log('🚀 ~ activeCard?.comments:', activeCard?.comments)
 
   //Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ
@@ -137,7 +158,6 @@ function ActiveCard() {
   const onUpdateCardCommentReactions = async (commentReactionsToUpdate) => {
     callApiUpdateCard({ commentReactionsToUpdate })
   }
-
   return (
     <Modal
       disableScrollLock
@@ -215,10 +235,24 @@ function ActiveCard() {
               />
             </Box>
 
+            {activeCard?.attachments.length !==0 &&
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <AttachmentIcon />
+                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Attachments</Typography>
+              </Box>
+
+              {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
+              <AttachmentList
+                attachments={activeCard?.attachments}
+              />
+            </Box>
+            }
+
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <DvrOutlinedIcon />
-                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Activity</Typography>
+                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Comments</Typography>
               </Box>
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
@@ -262,8 +296,7 @@ function ActiveCard() {
                 Cover
                 <VisuallyHiddenInput type="file" onChange={onUploadCardCover} />
               </SidebarItem>
-
-              <SidebarItem><AttachFileOutlinedIcon fontSize="small" />Attachment</SidebarItem>
+              <CardAttachment onUploadAttach= {onUploadAttach}/>
               <SidebarItem><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
               <SidebarItem><TaskAltOutlinedIcon fontSize="small" />Checklist</SidebarItem>
               <SidebarItem><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
