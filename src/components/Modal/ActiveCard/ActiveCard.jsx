@@ -158,6 +158,14 @@ function ActiveCard() {
   const onUpdateCardCommentReactions = async (commentReactionsToUpdate) => {
     callApiUpdateCard({ commentReactionsToUpdate })
   }
+
+  const onDeleteCardAttachment = async (attachmentToDelete) => {
+    await callApiUpdateCard({ attachmentToDelete })
+  }
+
+  const onUpdateCardAttachment = async (attachmentToUpdate) => {
+    await callApiUpdateCard({ attachmentToUpdate })
+  }
   return (
     <Modal
       disableScrollLock
@@ -245,6 +253,8 @@ function ActiveCard() {
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
               <AttachmentList
                 attachments={activeCard?.attachments}
+                onDeleteCardAttachment={onDeleteCardAttachment}
+                onUpdateCardAttachment={onUpdateCardAttachment}
               />
             </Box>
             }

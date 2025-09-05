@@ -59,7 +59,7 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
 
   const handleDeleteCardComment = (idEdited) => {
     onDeleteCardComment({ commentedAt: idEdited }).then(() => {
-      toast.success('Comment deleted successfully!')
+      toast.success('Attachment deleted successfully!')
     })
   }
 
