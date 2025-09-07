@@ -81,7 +81,22 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
   }
   return (
     <>
-      <Card>
+      <Card sx={{
+        overflowX: 'auto',
+        '&::-webkit-scrollbar': {
+          height: 8
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: '#ccc',
+          borderRadius: 3,
+          '&:hover': {
+            backgroundColor: '#ccc',
+          }
+        }
+        // '&::-webkit-scrollbar-thumb:hover': {
+        //   background: '#555'
+        // }
+      }}>
         {attachments.map((file, index) => (
           <Box key={index} sx={{ display: 'flex', justifyContent:'space-between', alignItems: 'center' }}>
             {/* Icon hoặc thumbnail */}
@@ -89,7 +104,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
               display: 'flex',
               gap: 2,
               alignItems: 'center',
-              marginLeft: '20px'
+              marginLeft: '20px',
             }}>
               {file.fileType.includes('image') ? (
                 <CardMedia
@@ -97,7 +112,10 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
                   height="48"
                   image={file.fileUrl}
                   alt="Example"
-                  sx={{ width: '64px' }}
+                  sx={{
+                    width: '64px',
+                    borderRadius: '5px'
+                  }}
                 />
               ) : (
                 <Box
@@ -119,7 +137,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
               )}
 
               {/* Thông tin file */}
-              <CardContent sx={{ width: '450px' }}>
+              <CardContent sx={{ width: '450px', marginTop: '10px' }}>
                 <Typography variant="body1" noWrap>
                   {file.fileName}
                 </Typography>
@@ -130,7 +148,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
             </Box>
 
             {/* Action buttons */}
-            <div className="flex space-x-1">
+            <Box sx={{ display: 'flex' }}>
               {/* <IconButton component="a" href={file.fileUrl} target="_blank"> */}
               <IconButton onClick={() => { openInNew(file) }} target="_blank">
                 <OpenInNewIcon fontSize="small" />
@@ -144,7 +162,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
               >
                 <MoreVertIcon fontSize="small" />
               </IconButton>
-            </div>
+            </Box>
           </Box>
         ))}
       </Card>
