@@ -214,12 +214,33 @@ function ActiveCard() {
           <ToggleFocusInput
             inputFontSize='22px'
             value={activeCard?.title}
-            onChangedValue={onUpdateCardTitle} />
+            onChangedValue={onUpdateCardTitle}
+            sx={{
+              textDecoration: activeCard?.isCompleted ? 'line-through' : 'none',
+              color: activeCard?.isCompleted ? 'success.main' : 'inherit'
+            }}
+          />
         </Box>
 
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {/* Left side */}
           <Grid xs={12} sm={9}>
+            <Box sx={{ mb: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <TaskAltOutlinedIcon color={activeCard?.isCompleted ? 'success' : 'disabled'} />
+                <Typography
+                  variant="span"
+                  sx={{
+                    fontWeight: '600',
+                    fontSize: '20px',
+                    color: activeCard?.isCompleted ? 'success.main' : 'text.secondary'
+                  }}
+                >
+                  {activeCard?.isCompleted ? 'This card is completed 🎉' : 'This card is not completed yet'}
+                </Typography>
+              </Box>
+            </Box>
+
             <Box sx={{ mb: 3 }}>
               <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>
 
@@ -308,19 +329,19 @@ function ActiveCard() {
               </SidebarItem>
               <CardAttachment onUploadAttach= {onUploadAttach}/>
               <SidebarItem><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
-              <SidebarItem><TaskAltOutlinedIcon fontSize="small" />Checklist</SidebarItem>
+              <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
               <SidebarItem><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
               <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
             </Stack>
 
             <Divider sx={{ my: 2 }} />
 
-            <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Power-Ups</Typography>
+            {/* <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Power-Ups</Typography>
             <Stack direction="column" spacing={1}>
               <SidebarItem><AspectRatioOutlinedIcon fontSize="small" />Card Size</SidebarItem>
               <SidebarItem><AddToDriveOutlinedIcon fontSize="small" />Google Drive</SidebarItem>
               <SidebarItem><AddOutlinedIcon fontSize="small" />Add Power-Ups</SidebarItem>
-            </Stack>
+            </Stack> */}
 
             <Divider sx={{ my: 2 }} />
 
