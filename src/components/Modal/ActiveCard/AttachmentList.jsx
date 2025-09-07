@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Card, CardContent, Typography, IconButton, Avatar, Box, CardMedia, MenuItem, ListItemIcon, ListItemText, Menu, Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions } from '@mui/material'
+import { Card, CardContent, Typography, IconButton, Box, CardMedia, MenuItem, ListItemIcon, ListItemText, Menu, Dialog, DialogTitle, DialogContent, TextField, Button, DialogActions } from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import moment from 'moment'
 import 'moment/locale/vi'
 import EditIcon from '@mui/icons-material/Edit'
@@ -37,22 +36,32 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
     setAnchorEl(null)
     setSelectedFile(null)
   }
+  const handleDownloadFile = async (selectedFile) => {
+    const response = await fetch(selectedFile.fileUrl) // gọi Cloudinary
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+
+    const a = document.createElement('a')
+    a.href = url
+    a.download = selectedFile.fileName // buộc browser tải về
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+
+    window.URL.revokeObjectURL(url)
+  }
+  const openInNew = (file) => {
+    if (file.fileType.includes('image') || file.fileType.includes('video')) {
+      window.open(file.fileUrl, '_blank')
+    } else {
+      handleDownloadFile(file)
+    }
+  }
   const handleAction = async (action) => {
     switch (action) {
     case 'download':
     {
-      const response = await fetch(selectedFile.fileUrl) // gọi Cloudinary
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-
-      const a = document.createElement('a')
-      a.href = url
-      a.download = selectedFile.fileName // buộc browser tải về
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-
-      window.URL.revokeObjectURL(url)
+      handleDownloadFile(selectedFile)
       break
     }
     case 'delete':
@@ -82,11 +91,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
               alignItems: 'center',
               marginLeft: '20px'
             }}>
-              {file.type === 'pdf' ? (
-                <Avatar variant="rounded" sx={{ bgcolor: '#e53935' }}>
-                  <PictureAsPdfIcon />
-                </Avatar>
-              ) : (
+              {file.fileType.includes('image') ? (
                 <CardMedia
                   component="img"
                   height="48"
@@ -94,10 +99,27 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
                   alt="Example"
                   sx={{ width: '64px' }}
                 />
+              ) : (
+                <Box
+                  sx={{
+                    width: '64px',
+                    height: '48px',
+                    bgcolor: '#f5f5f5',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 1,
+                    border: '1px solid #ddd'
+                  }}
+                >
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#44546f', fontSize: '14px' }}>
+                    {file.fileName.split('.').pop().toUpperCase()}
+                  </Typography>
+                </Box>
               )}
 
               {/* Thông tin file */}
-              <CardContent className="flex-1 !p-3">
+              <CardContent sx={{ width: '450px' }}>
                 <Typography variant="body1" noWrap>
                   {file.fileName}
                 </Typography>
@@ -109,7 +131,8 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
 
             {/* Action buttons */}
             <div className="flex space-x-1">
-              <IconButton component="a" href={file.fileUrl} target="_blank">
+              {/* <IconButton component="a" href={file.fileUrl} target="_blank"> */}
+              <IconButton onClick={() => { openInNew(file) }} target="_blank">
                 <OpenInNewIcon fontSize="small" />
               </IconButton>
               <IconButton
