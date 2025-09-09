@@ -225,6 +225,7 @@ function ActiveCard() {
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {/* Left side */}
           <Grid xs={12} sm={9}>
+            {activeCard?.isCompleted &&
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <TaskAltOutlinedIcon color={activeCard?.isCompleted ? 'success' : 'disabled'} />
@@ -233,13 +234,14 @@ function ActiveCard() {
                   sx={{
                     fontWeight: '600',
                     fontSize: '20px',
-                    color: activeCard?.isCompleted ? 'success.main' : 'text.secondary'
+                    color:'success.main'
                   }}
                 >
-                  {activeCard?.isCompleted ? 'This card is completed 🎉' : 'This card is not completed yet'}
+                  This card is completed 🎉
                 </Typography>
               </Box>
             </Box>
+            }
 
             <Box sx={{ mb: 3 }}>
               <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>

@@ -21,6 +21,7 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
   const [anchorPopoverElement, setAnchorPopoverElement] = useState(null)
   const isOpenPopover = Boolean(anchorPopoverElement)
   const pickerRef = useRef(null)
+  const [commentInput, setCommentInput] = useState('')
 
   const handleAddCardComment = (event) => {
     // Bắt hành động người dùng nhấn phím Enter && không phải hành động Shift + Enter
@@ -100,6 +101,9 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
     })
   }
 
+  const handleAnswerCardComment = (comment) => {
+    setCommentInput(`@${comment.userDisplayName}`)
+  }
   return (
     <Box sx={{ mt: 2 }}>
       {/* Xử lý thêm comment vào Card */}
@@ -115,6 +119,8 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
           type="text"
           variant="outlined"
           multiline
+          value={commentInput}
+          onChange={(e) => setCommentInput(e.target.value)}
           onKeyDown={handleAddCardComment}
         />
       </Box>
@@ -169,7 +175,7 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
             <Typography variant="span" sx={{ fontSize: '12px' }}>
               {moment(comment.commentedAt).format('llll')}
             </Typography>
-            {editingId === comment.commentedAt
+            {editingId === comment.commentedAt && comment.userId === currentUser._id
               ?<TextField
                 fullWidth
                 type="text"
@@ -237,23 +243,34 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
               >
                 <EmojiEmotionsIcon fontSize="inherit" />
               </IconButton>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
-                onClick={() => {
-                  setEditingId(comment.commentedAt)
-                  setEditContent(comment.content)
-                }}
-              >
-                Chỉnh sửa
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
-                onClick={() => handleDeleteCardComment(comment.commentedAt)}
-              >
-                Xoá
-              </Typography>
+              {comment.userId === currentUser._id ?
+                <>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
+                    onClick={() => {
+                      setEditingId(comment.commentedAt)
+                      setEditContent(comment.content)
+                    }}
+                  >
+                    Chỉnh sửa
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
+                    onClick={() => handleDeleteCardComment(comment.commentedAt)}
+                  >
+                    Xoá
+                  </Typography>
+                </>:
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: '12px', color: '#44546f', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={() => handleAnswerCardComment(comment)}
+                >
+                  Trả lời
+                </Typography>
+              }
             </Box>
           </Box>
         </Box>

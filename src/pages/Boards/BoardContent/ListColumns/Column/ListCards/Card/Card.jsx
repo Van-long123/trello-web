@@ -11,7 +11,7 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { useDispatch } from 'react-redux'
 import { updateCurrentActiveCard, showModalActiveCard } from '~/redux/activeCard/activeCardSlice'
-
+import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
 
 function Card({ card }) {
   const dispatch = useDispatch()
@@ -56,7 +56,7 @@ function Card({ card }) {
           <CardMedia sx={{ height: 140 }} image={card?.cover} title={card?.title} />
         }
         <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-          <Typography>{card?.title}</Typography>
+          <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>{card?.isCompleted ? <TaskAltOutlinedIcon fontSize="small" color='success'/> : ''}{card?.title}</Typography>
         </CardContent>
         {shouldShowCardActions() &&
           <CardActions sx={{ p: '0 4px 8px 4px' }}>
