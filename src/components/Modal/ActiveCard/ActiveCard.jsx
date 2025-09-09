@@ -7,14 +7,10 @@ import Grid from '@mui/material/Unstable_Grid2'
 import Stack from '@mui/material/Stack'
 import Divider from '@mui/material/Divider'
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined'
-import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined'
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined'
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined'
-import AspectRatioOutlinedIcon from '@mui/icons-material/AspectRatioOutlined'
-import AddToDriveOutlinedIcon from '@mui/icons-material/AddToDriveOutlined'
-import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import ArrowForwardOutlinedIcon from '@mui/icons-material/ArrowForwardOutlined'
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined'
 import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined'
@@ -42,6 +38,12 @@ import { CARD_MEMBER_ACTION } from '~/utils/constants'
 import LogoutIcon from '@mui/icons-material/Logout'
 import CardAttachment from './CardAttachment'
 import AttachmentList from './AttachmentList'
+import CardLabel from './CardLabelModal'
+import AddIcon from '@mui/icons-material/Add'
+import { IconButton } from '@mui/material'
+import { useState } from 'react'
+import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
+import CardLabelModal from './CardLabelModal'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -66,11 +68,12 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 /**
  * Note: sử dụng Modal để dễ linh hoạt tùy biến giao diện từ con số 0 cho phù hợp với mọi nhu cầu.
  */
-function ActiveCard() {
+function ActiveCard({ board }) {
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
   const currentUser = useSelector(selectorCurrentUser)
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
+  const [isOpenLabelModal, setIsOpenLabelModal] = useState(false)
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
@@ -134,6 +137,7 @@ function ActiveCard() {
       }
     )
   }
+
   // console.log('🚀 ~ activeCard?.comments:', activeCard?.comments)
 
   //Dùng async await ở đây để component con CardActivitySection chờ và nếu thành công thì mới clear thẻ
@@ -165,6 +169,10 @@ function ActiveCard() {
 
   const onUpdateCardAttachment = async (attachmentToUpdate) => {
     await callApiUpdateCard({ attachmentToUpdate })
+  }
+
+  const onUpdateCardLabel = async (labelIds) => {
+    await callApiUpdateCard(labelIds)
   }
   return (
     <Modal
@@ -243,6 +251,32 @@ function ActiveCard() {
             </Box>
             }
 
+            {activeCard?.labelIds.length !== 0 &&
+            <>
+              <Typography>Labels</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt:1, mb: 2 }}>
+                {board?.labels.map(label => {
+                  const active = activeCard?.labelIds.includes(label.id)
+                  return (
+                    active &&
+                    <Box key={label.id} variant='span' sx={{ bgcolor: label?.color, p: 2, borderRadius: '4px', width:'48px', height: '32px' }}>
+                      {label?.name || ''}
+                    </Box>
+                  )
+                })}
+                <IconButton
+                  onClick={() => setIsOpenLabelModal(true)}
+                  sx={{
+                    background: '#0515240F',
+                    borderRadius: '4px',
+                    width:'32px',
+                    height: '32px'
+                  }}>
+                  <AddIcon/>
+                </IconButton>
+              </Box>
+            </>
+            }
             <Box sx={{ mb: 3 }}>
               <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>
 
@@ -330,7 +364,8 @@ function ActiveCard() {
                 <VisuallyHiddenInput type="file" onChange={onUploadCardCover} />
               </SidebarItem>
               <CardAttachment onUploadAttach= {onUploadAttach}/>
-              <SidebarItem><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
+              <SidebarItem onClick={() => setIsOpenLabelModal(true)}><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
+              <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)}/>
               <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
               <SidebarItem><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
               <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>

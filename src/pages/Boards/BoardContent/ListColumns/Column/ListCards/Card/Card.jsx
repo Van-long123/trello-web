@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import { Card as MuiCard } from '@mui/material'
+import { Box, Card as MuiCard } from '@mui/material'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
@@ -12,8 +12,16 @@ import { CSS } from '@dnd-kit/utilities'
 import { useDispatch } from 'react-redux'
 import { updateCurrentActiveCard, showModalActiveCard } from '~/redux/activeCard/activeCardSlice'
 import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined'
+import {
+  selectorCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+import { useSelector } from 'react-redux'
 
 function Card({ card }) {
+  console.log('🚀 ~ Card ~ card:', card)
+  const board = useSelector(selectorCurrentActiveBoard)
+  const selectedLabels = board.labels.filter(label => card.labelIds.includes(label.id))
+  console.log('🚀 ~ Card ~ selectedLabels:', selectedLabels)
   const dispatch = useDispatch()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
@@ -54,6 +62,18 @@ function Card({ card }) {
       >
         {card?.cover &&
           <CardMedia sx={{ height: 140 }} image={card?.cover} title={card?.title} />
+        }
+        {selectedLabels?.length !== 0 &&
+          <>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt:1, ml: '12px', flexWrap: 'wrap' }}>
+              {selectedLabels?.map(label =>
+                (
+                  <Box key={label.id} sx={{ bgcolor: label?.color, borderRadius: '4px', width:'42px', height: '7px' }}>
+                  </Box>
+                )
+              )}
+            </Box>
+          </>
         }
         <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
           <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>{card?.isCompleted ? <TaskAltOutlinedIcon fontSize="small" color='success'/> : ''}{card?.title}</Typography>
