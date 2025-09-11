@@ -254,13 +254,12 @@ function ActiveCard({ board }) {
             {activeCard?.labelIds.length !== 0 &&
             <>
               <Typography>Labels</Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt:1, mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt:1, mb: 2, flexWrap: 'wrap' }}>
                 {board?.labels.map(label => {
                   const active = activeCard?.labelIds.includes(label.id)
                   return (
                     active &&
-                    <Box key={label.id} variant='span' sx={{ bgcolor: label?.color, p: 2, borderRadius: '4px', width:'48px', height: '32px' }}>
-                      {label?.name || ''}
+                    <Box key={label.id} component='span' sx={{ bgcolor: label?.color, p: 2, borderRadius: '4px', width:'48px', height: '32px' }}>
                     </Box>
                   )
                 })}
