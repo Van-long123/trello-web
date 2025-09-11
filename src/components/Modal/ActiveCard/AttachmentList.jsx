@@ -104,7 +104,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
               display: 'flex',
               gap: 2,
               alignItems: 'center',
-              marginLeft: '20px',
+              marginLeft: '20px'
             }}>
               {file.fileType.includes('image') ? (
                 <CardMedia
@@ -177,7 +177,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
       >
         <MenuItem onClick={handleClickOpenDialog}>
           <ListItemIcon><EditIcon fontSize="small" /></ListItemIcon>
-          Sửa
+          Edit
         </MenuItem>
         {/* <MenuItem onClick={() => handleAction('comment')}>
           <ListItemIcon><CommentIcon fontSize="small" /></ListItemIcon>
@@ -185,11 +185,11 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
         </MenuItem> */}
         <MenuItem onClick={() => handleAction('download')}>
           <ListItemIcon><DownloadIcon fontSize="small" /></ListItemIcon>
-          Tải xuống
+          Download
         </MenuItem>
         <MenuItem onClick={() => handleAction('delete')} sx={{ color: 'red' }}>
           <ListItemIcon><DeleteIcon fontSize="small" color="error" /></ListItemIcon>
-          Loại bỏ
+          Remove
         </MenuItem>
       </Menu>
 
@@ -198,7 +198,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
           <IconButton onClick={handleCloseDialog}>
             <ArrowBackIcon />
           </IconButton>
-              Sửa tệp đính kèm
+              Edit attachment
           <IconButton onClick={() => {
             handleCloseDialog()
             handleClose()
@@ -210,7 +210,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
         <DialogContent>
           <TextField
             fullWidth
-            label="Tên tệp"
+            label="File name"
             sx={{ marginTop: '9px' }}
             value={fileName}
             onChange={(e) => setFileName(e.target.value)}
@@ -224,7 +224,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
             color="primary"
             fullWidth
           >
-            Cập nhật
+            Update
           </Button>
         </DialogActions>
       </Dialog>
