@@ -18,10 +18,8 @@ import {
 import { useSelector } from 'react-redux'
 
 function Card({ card }) {
-  console.log('🚀 ~ Card ~ card:', card)
   const board = useSelector(selectorCurrentActiveBoard)
-  const selectedLabels = board.labels.filter(label => card.labelIds.includes(label.id))
-  console.log('🚀 ~ Card ~ selectedLabels:', selectedLabels)
+  const selectedLabels = board.labels.filter(label => card?.labelIds?.includes(label.id))
   const dispatch = useDispatch()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
