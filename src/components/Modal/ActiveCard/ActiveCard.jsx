@@ -30,9 +30,10 @@ import { styled } from '@mui/material/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearAndHideCurrentActiveCard, selectCurrentActiveCard, updateCurrentActiveCard, selectIsShowModalActiveCard } from '~/redux/activeCard/activeCardSlice'
 import {
+  fetchBoardDetailsAPI,
   updateCartInBoard
 } from '~/redux/activeBoard/activeBoardSlice'
-import { updateCardDetailsApi, createAttachInCardApi } from '~/apis'
+import { updateCardDetailsApi, createAttachInCardApi, updateBoardDetailsAPI } from '~/apis'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTION } from '~/utils/constants'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -174,6 +175,12 @@ function ActiveCard({ board }) {
   const onUpdateCardLabel = async (labelIds) => {
     await callApiUpdateCard(labelIds)
   }
+
+  const onUpdateBoardCustomLabels = async (customLabels) => {
+    const boardDetail = await updateBoardDetailsAPI(board._id, { customLabels })
+    dispatch(fetchBoardDetailsAPI(boardDetail._id))
+  }
+
   return (
     <Modal
       disableScrollLock
@@ -364,7 +371,7 @@ function ActiveCard({ board }) {
               </SidebarItem>
               <CardAttachment onUploadAttach= {onUploadAttach}/>
               <SidebarItem onClick={() => setIsOpenLabelModal(true)}><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
-              <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)}/>
+              <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)} onUpdateBoardCustomLabels={onUpdateBoardCustomLabels}/>
               <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
               <SidebarItem><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
               <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
