@@ -15,6 +15,8 @@ function CardLabelModal({ cardLabelIds, onUpdateCardLabel, board, isOpen, onClos
   const [searchTerm, setSearchTerm] = useState('')
   const [isOpenActionLabel, setIsOpenActionLabel] = useState(false)
   const [activeLabel, setActiveLabel] = useState(null)
+  console.log('🚀 ~ CardLabelModal ~ activeLabel:', activeLabel)
+  const [oldLabel, setOldLabel] = useState(null)
   const [visibleLabels, setVisibleLabels] = useState(board?.customLabels)
   const [isCreateMode, setIsCreateMode] = useState(false)
   const [labelTitle, setLabelTitle] = useState('')
@@ -46,24 +48,48 @@ function CardLabelModal({ cardLabelIds, onUpdateCardLabel, board, isOpen, onClos
 
     onUpdateBoardCustomLabels(customLabels)
   }
-  const handleAddLabelCustom = () => {
-    const existingIndex = visibleLabels.findIndex(l => l.id === activeLabel.id)
-    const newLabel = {
-      ...activeLabel,
-      title: labelTitle?.trim() || activeLabel?.title || ''
-    }
+  const handleAddEditLabelCustom = () => {
     let customLabels
-    if (existingIndex !== -1) {
-      if (!labelTitle?.trim()) {
-        handleCloseModal()
-        return
+    if (isCreateMode) {
+      const existingIndex = visibleLabels.findIndex(l => l.id === activeLabel.id)
+      const newLabel = {
+        ...activeLabel,
+        title: labelTitle?.trim() || activeLabel?.title || ''
       }
-      customLabels = [...visibleLabels]
-      customLabels[existingIndex] = newLabel
+      if (existingIndex !== -1) {
+        if (!labelTitle?.trim()) {
+          handleCloseModal()
+          return
+        }
+        customLabels = [...visibleLabels]
+        customLabels[existingIndex] = newLabel
+      } else {
+        customLabels = [...visibleLabels, newLabel]
+      }
     } else {
-      customLabels = [...visibleLabels, newLabel]
+      customLabels = [...visibleLabels]
+      const IndexLabel = customLabels.findIndex(l => l.id === oldLabel.id)
+      const existedIndex = customLabels.findIndex(l => l.id === activeLabel.id)
+
+      if (existedIndex === -1) {
+        if (activeLabel.id !== oldLabel.id) {
+          customLabels[IndexLabel] = {
+            ...activeLabel,
+            title: labelTitle.trim() || activeLabel.title || ''
+          }
+        } else {
+          customLabels[IndexLabel] = {
+            ...customLabels[IndexLabel],
+            title: labelTitle.trim()
+          }
+        }
+      } else {
+        customLabels[existedIndex] = {
+          ...customLabels[existedIndex],
+          title: labelTitle.trim()
+        }
+      }
     }
-    console.log('object')
     setVisibleLabels(customLabels)
     onUpdateBoardCustomLabels(customLabels)
     handleCloseModal()
@@ -129,12 +155,14 @@ function CardLabelModal({ cardLabelIds, onUpdateCardLabel, board, isOpen, onClos
                   checked={!!active}
                   onChange={() => toggleLabel(label.id)}
                 />
-                <Box sx={{ flex: 1, bgcolor: label?.color, borderRadius: '4px', height: '35px', padding: '5px 0 5px 10px' }}>
+                <Box sx={{ flex: 1, bgcolor: label?.color, borderRadius: '4px', height: '35px', padding: '5px 0 5px 10px', fontWeight: 400, color: '#000000ff' }}>
                   {label?.title || ''}
                 </Box>
                 <IconButton size="small" onClick={() => {
                   handleOpenModal(true)
                   setActiveLabel(label)
+                  setOldLabel(label)
+                  setLabelTitle(label?.title)
                 }}>
                   <EditIcon fontSize="small" />
                 </IconButton>
@@ -207,7 +235,7 @@ function CardLabelModal({ cardLabelIds, onUpdateCardLabel, board, isOpen, onClos
           <TextField
             size="small"
             fullWidth
-            value={activeLabel?.title}
+            value={labelTitle}
             onChange={e => setLabelTitle(e.target.value)}
           />
           <Typography variant="body2" sx={{ fontWeight: 500, my: 1 }}>Select a color</Typography>
@@ -229,10 +257,9 @@ function CardLabelModal({ cardLabelIds, onUpdateCardLabel, board, isOpen, onClos
               )
             })}
           </Box>
-          <Button variant="text" fullWidth sx={{ background: '#0515240F', color: '#292A2E', margin: '0 auto', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '7px' }}><CloseIcon sx={{ fontSize: '20px' }}/> Remove color</Button>
           <Divider sx={{ my: 2 }}/>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between  ' }}>
-            <Button variant="contained" color='primary' onClick={handleAddLabelCustom}>{isCreateMode ? 'Create new' : 'Save'}</Button>
+            <Button variant="contained" color='primary' onClick={handleAddEditLabelCustom}>{isCreateMode ? 'Create new' : 'Save'}</Button>
             {!isCreateMode &&
               <Button variant="contained" color='error' onClick={handleDeleteLabelCustom}>Delete</Button>
             }
