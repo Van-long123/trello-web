@@ -24,6 +24,9 @@ let persistor = persistStore(store)
 import { injectStore } from '~/utils/authoriseAxios'
 injectStore(store)
 
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs' // hoặc AdapterMoment nếu dùng moment
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
@@ -37,7 +40,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           }}>
             <CssBaseline />
             <GlobalStyles styles={{ a:{ color: 'inherit', textDecoration: 'none' } }} />
-            <App />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <App />
+            </LocalizationProvider>
             <ToastContainer position="bottom-right" theme="colored" closeOnClick autoClose={3000} />
           </ConfirmProvider>
         </CssVarsProvider>
