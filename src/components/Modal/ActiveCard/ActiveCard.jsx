@@ -39,12 +39,13 @@ import { CARD_MEMBER_ACTION } from '~/utils/constants'
 import LogoutIcon from '@mui/icons-material/Logout'
 import CardAttachment from './CardAttachment'
 import AttachmentList from './AttachmentList'
-import CardLabel from './CardLabelModal'
 import AddIcon from '@mui/icons-material/Add'
 import { IconButton } from '@mui/material'
 import { useState } from 'react'
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import CardLabelModal from './CardLabelModal'
+import CardDatesModal from './CardDatesModal'
+import dayjs from 'dayjs'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -75,6 +76,7 @@ function ActiveCard({ board }) {
   const currentUser = useSelector(selectorCurrentUser)
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
   const [isOpenLabelModal, setIsOpenLabelModal] = useState(false)
+  const [isOpenDatesModal, setIsOpenDatesModal] = useState(false)
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
@@ -181,6 +183,24 @@ function ActiveCard({ board }) {
     dispatch(fetchBoardDetailsAPI(boardDetail._id))
   }
 
+  const onUpdateCardDates = async (dates) => {
+    callApiUpdateCard(dates)
+  }
+
+  // color: activeCard?.isCompleted && dayjs().isAfter(activeCard?.dueDate) ? '#FFFFFF' : '#AE2E24',
+  // background: activeCard?.isCompleted && dayjs().isAfter(activeCard?.dueDate) ? '#5B7F24' : '#FFECEB',
+  let colorDate
+  let backgroundDate
+  let textDate = ''
+  if (activeCard?.isCompleted ) {
+    backgroundDate = '#5B7F24'
+    colorDate = '#FFFFFF'
+    textDate = 'Completed'
+  } else if (dayjs().isAfter(activeCard?.dueDate)) {
+    backgroundDate = '#AE2E24'
+    colorDate = '#FFFFFF'
+    textDate = 'Overdue'
+  }
   return (
     <Modal
       disableScrollLock
@@ -264,9 +284,12 @@ function ActiveCard({ board }) {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt:1, mb: 2, flexWrap: 'wrap' }}>
                 {board?.labels.map(label => {
                   const active = activeCard?.labelIds.includes(label.id)
+                  if (!active) return null
+                  const customLabel = board?.customLabels?.find(cl => cl.id === label.id)
                   return (
                     active &&
-                    <Box key={label.id} component='span' sx={{ bgcolor: label?.color, p: 2, borderRadius: '4px', width:'48px', height: '32px' }}>
+                    <Box key={label.id} component='span' sx={{ bgcolor: label?.color, p: 2, borderRadius: '4px', width:'48px', height: '32px', display:'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {customLabel?.title || ''}
                     </Box>
                   )
                 })}
@@ -283,6 +306,42 @@ function ActiveCard({ board }) {
               </Box>
             </>
             }
+            {activeCard?.dueDate &&
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" sx={{
+                  display: 'block',
+                  py: 0.5,
+                  borderRadius: 1,
+                  color: '#292A2E'
+                }}>
+                  Date
+                </Typography>
+                <Typography variant="body2" sx={{
+                  display: 'inline-block',
+                  px: 2,
+                  py: 1,
+                  borderRadius: 1,
+                  color: '#292A2E',
+                  background: '#091e420f',
+                  fontWeight: 500
+                  // bgcolor:  activeCard?.isCompleted || dayjs().isBefore(activeCard?.dueDate) ? 'success.main' : 'error.main'
+                }}>
+                  {dayjs(activeCard?.dueDate).format('MMM D, YYYY h:mm A')}
+                  {textDate &&
+                  <Typography variant="span" sx={{ marginLeft: 1,
+                    color: colorDate,
+                    background:  backgroundDate,
+                    px: 1,
+                    py: 0.5,
+                    borderRadius: '8px'
+                  }}>
+                    {textDate}
+                  </Typography>
+                  }
+                </Typography>
+              </Box>
+            }
+
             <Box sx={{ mb: 3 }}>
               <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>
 
@@ -373,7 +432,13 @@ function ActiveCard({ board }) {
               <SidebarItem onClick={() => setIsOpenLabelModal(true)}><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
               <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)} onUpdateBoardCustomLabels={onUpdateBoardCustomLabels}/>
               <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
-              <SidebarItem><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
+              <SidebarItem className="active" onClick={() => setIsOpenDatesModal(true)}><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
+              <CardDatesModal
+                open={isOpenDatesModal}
+                onClose={() => setIsOpenDatesModal(false)}
+                card={activeCard}
+                onUpdateCardDates={onUpdateCardDates}
+              />
               <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
             </Stack>
 

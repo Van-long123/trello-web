@@ -15,7 +15,6 @@ function CardLabelModal({ cardLabelIds, onUpdateCardLabel, board, isOpen, onClos
   const [searchTerm, setSearchTerm] = useState('')
   const [isOpenActionLabel, setIsOpenActionLabel] = useState(false)
   const [activeLabel, setActiveLabel] = useState(null)
-  console.log('🚀 ~ CardLabelModal ~ activeLabel:', activeLabel)
   const [oldLabel, setOldLabel] = useState(null)
   const [visibleLabels, setVisibleLabels] = useState(board?.customLabels)
   const [isCreateMode, setIsCreateMode] = useState(false)
