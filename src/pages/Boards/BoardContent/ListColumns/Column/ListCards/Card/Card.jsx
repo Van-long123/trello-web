@@ -18,9 +18,12 @@ import {
 import { useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 import WatchLaterOutlinedIcon from '@mui/icons-material/WatchLaterOutlined'
+import { selectorCurrentUser } from '~/redux/user/userSlice'
+import { Eye } from 'lucide-react'
 
 function Card({ card }) {
   const board = useSelector(selectorCurrentActiveBoard)
+  const currentUser = useSelector(selectorCurrentUser)
   const selectedLabels = board.labels.filter(label => card?.labelIds?.includes(label.id))
   const dispatch = useDispatch()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -33,8 +36,10 @@ function Card({ card }) {
     opacity: isDragging ? 0.5 : undefined,
     border: isDragging ? '1px solid #2ecc71' : undefined
   }
+  const isWatching = card.watchers.includes(currentUser._id)
+
   const shouldShowCardActions= () => {
-    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length || !!card?.dueDate
+    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length || !!card?.dueDate || !!isWatching
   }
 
   const setActiveCard = () => {
@@ -92,6 +97,11 @@ function Card({ card }) {
         {shouldShowCardActions() &&
           <CardActions sx={{ display: 'flex', flexWrap: 'wrap', marginTop: '-15px' }}>
             {/* 1 dấu ! là phủ đinh trả về true/false  còn !! là lấy giá trị nó true hay false chính giá trị đó ko phủ đinhj   */}
+            {isWatching &&
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Eye size={19} color="#505258" />
+              </Box>
+            }
             {!!card?.dueDate &&
               <Typography variant="body2" sx={{
                 display: 'flex',
