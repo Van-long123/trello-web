@@ -93,7 +93,16 @@ export const watchColumn = async (columnId) => {
   return response.data
 }
 
-export const unwatchCard = async (columnId) => {
+export const unwatchColumn = async (columnId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/columns/${columnId}/watch`)
+  return response.data
+}
+
+export const watchCard = async (cardId) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/watch`)
+  return response.data
+}
+export const unwatchCard = async (cardId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/cards/${cardId}/watch`)
   return response.data
 }

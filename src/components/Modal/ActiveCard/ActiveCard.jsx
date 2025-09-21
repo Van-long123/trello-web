@@ -33,7 +33,7 @@ import {
   fetchBoardDetailsAPI,
   updateCartInBoard
 } from '~/redux/activeBoard/activeBoardSlice'
-import { updateCardDetailsApi, createAttachInCardApi, updateBoardDetailsAPI } from '~/apis'
+import { updateCardDetailsApi, createAttachInCardApi, updateBoardDetailsAPI, watchColumn, unwatchCard, watchCard } from '~/apis'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTION } from '~/utils/constants'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -46,6 +46,8 @@ import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined'
 import CardLabelModal from './CardLabelModal'
 import CardDatesModal from './CardDatesModal'
 import dayjs from 'dayjs'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import { Eye } from 'lucide-react'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -77,12 +79,19 @@ function ActiveCard({ board }) {
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
   const [isOpenLabelModal, setIsOpenLabelModal] = useState(false)
   const [isOpenDatesModal, setIsOpenDatesModal] = useState(false)
+  const [isWatching, setIsWatching] = useState(activeCard?.watchers.includes(currentUser._id))
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
     dispatch(clearAndHideCurrentActiveCard())
   }
-
+  const updateCardRedux = (data, isWatch = null) => {
+    dispatch(updateCurrentActiveCard(data))
+    dispatch(updateCartInBoard(data))
+    if (isWatch !== null) {
+      setIsWatching(isWatch)
+    }
+  }
   // Function dùng chung cho các trường hợp update card title, description, cover, comment, ...
   const callApiUpdateCard = async (updateData) => {
     const updatedCard = await updateCardDetailsApi(activeCard._id, updateData)
@@ -122,8 +131,9 @@ function ActiveCard({ board }) {
 
   const callApiCreateAttachInCard = async (updateData) => {
     const updatedCard = await createAttachInCardApi(activeCard._id, updateData)
-    dispatch(updateCurrentActiveCard(updatedCard))
-    dispatch(updateCartInBoard(updatedCard))
+    updateCardRedux(updatedCard)
+    // dispatch(updateCurrentActiveCard(updatedCard))
+    // dispatch(updateCartInBoard(updatedCard))
     return updatedCard
   }
   const onUploadAttach = async (event) => {
@@ -181,6 +191,19 @@ function ActiveCard({ board }) {
   const onUpdateBoardCustomLabels = async (customLabels) => {
     const boardDetail = await updateBoardDetailsAPI(board._id, { customLabels })
     dispatch(fetchBoardDetailsAPI(boardDetail._id))
+  }
+
+
+  const toggleWatch = async () => {
+    if (!isWatching) {
+      watchCard(activeCard._id).then(data => {
+        updateCardRedux(data, true)
+      })
+    } else {
+      unwatchCard(activeCard._id).then(data => {
+        updateCardRedux(data, false)
+      })
+    }
   }
 
   const onUpdateCardDates = async (dates) => {
@@ -305,6 +328,31 @@ function ActiveCard({ board }) {
                 </IconButton>
               </Box>
             </>
+            }
+            {isWatching &&
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2,
+                  py: 1,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  color: '#505258',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: '#f1f2f4',
+                    color: '#172b4d'
+                  }
+                }}
+              >
+                <Eye size={18} />
+                  Tracking card
+              </Box>
+
             }
             {activeCard?.dueDate &&
               <Box sx={{ mb: 2 }}>
@@ -433,6 +481,7 @@ function ActiveCard({ board }) {
               <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)} onUpdateBoardCustomLabels={onUpdateBoardCustomLabels}/>
               <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
               <SidebarItem className="active" onClick={() => setIsOpenDatesModal(true)}><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
+              <SidebarItem className="active" onClick={toggleWatch}><RemoveRedEyeIcon fontSize="small" />Monitor</SidebarItem>
               <CardDatesModal
                 open={isOpenDatesModal}
                 onClose={() => setIsOpenDatesModal(false)}

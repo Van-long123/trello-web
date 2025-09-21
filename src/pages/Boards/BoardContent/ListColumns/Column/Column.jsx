@@ -22,7 +22,7 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useConfirm } from 'material-ui-confirm'
-import { createNewCardAPI, deleteColumnDetailsAPI, unwatchCard, updateColumnDetailsAPI, watchColumn } from '~/apis/index'
+import { createNewCardAPI, deleteColumnDetailsAPI, unwatchColumn, updateColumnDetailsAPI, watchColumn } from '~/apis/index'
 import { cloneDeep } from 'lodash'
 import {
   updateCurrentActiveBoard,
@@ -147,26 +147,23 @@ function Column({ column }) {
     })
   }
 
+  const updateBoardRedux = (data, isWatch) => {
+    const newBoard = cloneDeep(board)
+    const columnToUpdate = newBoard.columns.find(column => column._id === data._id)//column._id
+    if (columnToUpdate) {
+      columnToUpdate.watchers = data.watchers
+    }
+    dispatch(updateCurrentActiveBoard(newBoard))
+    setIsWatching(isWatch)
+  }
   const toggleWatch = async () => {
     if (!isWatching) {
       watchColumn(column._id).then(data => {
-        const newBoard = cloneDeep(board)
-        const columnToUpdate = newBoard.columns.find(column => column._id === data._id)//column._id
-        if (columnToUpdate) {
-          columnToUpdate.watchers = data.watchers
-        }
-        dispatch(updateCurrentActiveBoard(newBoard))
-        setIsWatching(true)
+        updateBoardRedux(data, true)
       })
     } else {
-      unwatchCard(column._id).then(data => {
-        const newBoard = cloneDeep(board)
-        const columnToUpdate = newBoard.columns.find(column => column._id === data._id)//column._id
-        if (columnToUpdate) {
-          columnToUpdate.watchers = data.watchers
-        }
-        dispatch(updateCurrentActiveBoard(newBoard))
-        setIsWatching(false)
+      unwatchColumn(column._id).then(data => {
+        updateBoardRedux(data, false)
       })
     }
   }
