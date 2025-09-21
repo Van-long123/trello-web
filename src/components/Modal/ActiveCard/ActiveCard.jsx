@@ -79,18 +79,16 @@ function ActiveCard({ board }) {
   const isShowModalActiveCard = useSelector(selectIsShowModalActiveCard)
   const [isOpenLabelModal, setIsOpenLabelModal] = useState(false)
   const [isOpenDatesModal, setIsOpenDatesModal] = useState(false)
-  const [isWatching, setIsWatching] = useState(activeCard?.watchers.includes(currentUser._id))
+  const isWatching = activeCard?.watchers.includes(currentUser._id)
+
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
   const handleCloseModal = () => {
     dispatch(clearAndHideCurrentActiveCard())
   }
-  const updateCardRedux = (data, isWatch = null) => {
+  const updateCardRedux = (data) => {
     dispatch(updateCurrentActiveCard(data))
     dispatch(updateCartInBoard(data))
-    if (isWatch !== null) {
-      setIsWatching(isWatch)
-    }
   }
   // Function dùng chung cho các trường hợp update card title, description, cover, comment, ...
   const callApiUpdateCard = async (updateData) => {
@@ -197,11 +195,11 @@ function ActiveCard({ board }) {
   const toggleWatch = async () => {
     if (!isWatching) {
       watchCard(activeCard._id).then(data => {
-        updateCardRedux(data, true)
+        updateCardRedux(data)
       })
     } else {
       unwatchCard(activeCard._id).then(data => {
-        updateCardRedux(data, false)
+        updateCardRedux(data)
       })
     }
   }
