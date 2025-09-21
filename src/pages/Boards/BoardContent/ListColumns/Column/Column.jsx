@@ -22,7 +22,7 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useConfirm } from 'material-ui-confirm'
-import { createNewCardAPI, deleteColumnDetailsAPI, updateColumnDetailsAPI } from '~/apis/index'
+import { createNewCardAPI, deleteColumnDetailsAPI, unwatchCard, updateColumnDetailsAPI, watchColumn } from '~/apis/index'
 import { cloneDeep } from 'lodash'
 import {
   updateCurrentActiveBoard,
@@ -30,6 +30,11 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import { Eye } from 'lucide-react'
+import DoneIcon from '@mui/icons-material/Done'
+import { selectorCurrentUser } from '~/redux/user/userSlice'
+
 
 function Column({ column }) {
   const board = useSelector(selectorCurrentActiveBoard)
@@ -48,6 +53,10 @@ function Column({ column }) {
 
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
+
+  const currentUser = useSelector(selectorCurrentUser)
+  const [isWatching, setIsWatching] = useState(column.watchers.includes(currentUser._id))
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -138,6 +147,30 @@ function Column({ column }) {
     })
   }
 
+  const toggleWatch = async () => {
+    if (!isWatching) {
+      watchColumn(column._id).then(data => {
+        const newBoard = cloneDeep(board)
+        const columnToUpdate = newBoard.columns.find(column => column._id === data._id)//column._id
+        if (columnToUpdate) {
+          columnToUpdate.watchers = data.watchers
+        }
+        dispatch(updateCurrentActiveBoard(newBoard))
+        setIsWatching(true)
+      })
+    } else {
+      unwatchCard(column._id).then(data => {
+        const newBoard = cloneDeep(board)
+        const columnToUpdate = newBoard.columns.find(column => column._id === data._id)//column._id
+        if (columnToUpdate) {
+          columnToUpdate.watchers = data.watchers
+        }
+        dispatch(updateCurrentActiveBoard(newBoard))
+        setIsWatching(false)
+      })
+    }
+  }
+
   return (
     <>
       <div
@@ -181,6 +214,11 @@ function Column({ column }) {
               value={column?.title}
               onChangedValue={onUpdateColumnTitle}
             />
+            {isWatching &&
+              <Box sx={{ display: 'flex', justifyContent: 'center', marginRight: '10px', marginTop: '1px' }}>
+                <Eye size={19} color="#505258" />
+              </Box>
+            }
             <Tooltip title="More options" >
               <ExpandMoreIcon
                 sx={{
@@ -224,6 +262,13 @@ function Column({ column }) {
               <MenuItem>
                 <ListItemIcon><ContentPaste fontSize="small" /></ListItemIcon>
                 <ListItemText>Paste</ListItemText>
+              </MenuItem>
+              <MenuItem onClick={toggleWatch}>
+                <ListItemIcon><RemoveRedEyeIcon fontSize="small" /></ListItemIcon>
+                <ListItemText>Monitor</ListItemText>
+                {isWatching &&
+                  <DoneIcon fontSize="small"/>
+                }
               </MenuItem>
               <Divider />
               <MenuItem

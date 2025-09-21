@@ -87,3 +87,13 @@ export const verifyOAuth = async (data) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/users/verify-oauth`, data)
   return response.data
 }
+
+export const watchColumn = async (columnId) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/columns/${columnId}/watch`)
+  return response.data
+}
+
+export const unwatchCard = async (columnId) => {
+  const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/columns/${columnId}/watch`)
+  return response.data
+}
