@@ -15,10 +15,16 @@ import {
   selectorCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useSelector, useDispatch } from 'react-redux'
+import CardCopyModal from '~/components/Modal/CardCopyModal'
 function ListColumns({ columns }) {
   const board = useSelector(selectorCurrentActiveBoard)
   const dispatch = useDispatch()
-
+  const [openCopyModal, setOpenCopyModal] = useState(false)
+  const [selectedColumn, setSelectedColumn] = useState(null)
+  const handleOpenCopyModal = (column) => {
+    setSelectedColumn(column)
+    setOpenCopyModal(true)
+  }
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
 
@@ -69,10 +75,11 @@ function ListColumns({ columns }) {
           overflowY: 'hidden',
           '&::-webkit-scrollbar-track': { m: 2 }
         }}>
-          {columns?.map((column, index) =>
+          {columns?.map((column) =>
             <Column
               key={column._id}
               column={column}
+              onOpenCopyModal={handleOpenCopyModal}
             />
           )}
           {/* <Column /> */}
@@ -160,6 +167,11 @@ function ListColumns({ columns }) {
           }
         </Box>
       </SortableContext>
+      <CardCopyModal
+        isOpen={openCopyModal}
+        onClose={() => setOpenCopyModal(false)}
+        column={selectedColumn}
+      />
     </>
   )
 }
