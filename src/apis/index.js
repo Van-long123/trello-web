@@ -43,6 +43,10 @@ export const createNewCardAPI = async (newCardData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards`, newCardData)
   return response.data
 }
+export const createNewCardCopyAPI = async (newColumnData) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/copy`, newColumnData)
+  return response.data
+}
 
 /** Users */
 export const registerUserApi = async (data) => {
