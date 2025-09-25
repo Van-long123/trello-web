@@ -33,7 +33,7 @@ import {
   fetchBoardDetailsAPI,
   updateCartInBoard
 } from '~/redux/activeBoard/activeBoardSlice'
-import { updateCardDetailsApi, createAttachInCardApi, updateBoardDetailsAPI, watchColumn, unwatchCard, watchCard } from '~/apis'
+import { updateCardDetailsApi, createAttachInCardApi, updateBoardDetailsAPI, unwatchCard, watchCard } from '~/apis'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 import { CARD_MEMBER_ACTION } from '~/utils/constants'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -48,6 +48,7 @@ import CardDatesModal from './CardDatesModal'
 import dayjs from 'dayjs'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import { Eye } from 'lucide-react'
+import CardCopyModal from '../CardCopyModal'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -80,6 +81,7 @@ function ActiveCard({ board }) {
   const [isOpenLabelModal, setIsOpenLabelModal] = useState(false)
   const [isOpenDatesModal, setIsOpenDatesModal] = useState(false)
   const isWatching = activeCard?.watchers.includes(currentUser._id)
+  const [openCopyModal, setOpenCopyModal] = useState(false)
 
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
@@ -223,37 +225,38 @@ function ActiveCard({ board }) {
     textDate = 'Overdue'
   }
   return (
-    <Modal
-      disableScrollLock
-      open={isShowModalActiveCard}
-      onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
-      sx={{ overflowY: 'auto' }}>
-      <Box sx={{
-        position: 'relative',
-        width: {
-          xs: '90%',
-          sm: '85%',
-          md: '100%'
-        },
-        maxWidth: 900,
-        bgcolor: 'white',
-        boxShadow: 24,
-        borderRadius: '8px',
-        border: 'none',
-        outline: 0,
-        padding: '40px 20px 20px',
-        margin: '50px auto',
-        backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#fff'
-      }}>
+    <>
+      <Modal
+        disableScrollLock
+        open={isShowModalActiveCard}
+        onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
+        sx={{ overflowY: 'auto' }}>
         <Box sx={{
-          position: 'absolute',
-          top: '12px',
-          right: '10px',
-          cursor: 'pointer'
+          position: 'relative',
+          width: {
+            xs: '90%',
+            sm: '85%',
+            md: '100%'
+          },
+          maxWidth: 900,
+          bgcolor: 'white',
+          boxShadow: 24,
+          borderRadius: '8px',
+          border: 'none',
+          outline: 0,
+          padding: '40px 20px 20px',
+          margin: '50px auto',
+          backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : '#fff'
         }}>
-          <CancelIcon color="error" sx={{ '&:hover': { color: 'error.light' } }} onClick={handleCloseModal} />
-        </Box>
-        {activeCard?.cover &&
+          <Box sx={{
+            position: 'absolute',
+            top: '12px',
+            right: '10px',
+            cursor: 'pointer'
+          }}>
+            <CancelIcon color="error" sx={{ '&:hover': { color: 'error.light' } }} onClick={handleCloseModal} />
+          </Box>
+          {activeCard?.cover &&
         <Box sx={{ mb: 4 }}>
           <img
             style={{ width: '100%', height: '320px', borderRadius: '6px', objectFit: 'cover' }}
@@ -261,27 +264,27 @@ function ActiveCard({ board }) {
             alt={activeCard?.title}
           />
         </Box>
-        }
+          }
 
-        <Box sx={{ mb: 1, mt: -3, pr: 2.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <CreditCardIcon />
+          <Box sx={{ mb: 1, mt: -3, pr: 2.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CreditCardIcon />
 
-          {/* Feature 01: Xử lý tiêu đề của Card */}
-          <ToggleFocusInput
-            inputFontSize='22px'
-            value={activeCard?.title}
-            onChangedValue={onUpdateCardTitle}
-            sx={{
-              textDecoration: activeCard?.isCompleted ? 'line-through' : 'none',
-              color: activeCard?.isCompleted ? 'success.main' : 'inherit'
-            }}
-          />
-        </Box>
+            {/* Feature 01: Xử lý tiêu đề của Card */}
+            <ToggleFocusInput
+              inputFontSize='22px'
+              value={activeCard?.title}
+              onChangedValue={onUpdateCardTitle}
+              sx={{
+                textDecoration: activeCard?.isCompleted ? 'line-through' : 'none',
+                color: activeCard?.isCompleted ? 'success.main' : 'inherit'
+              }}
+            />
+          </Box>
 
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          {/* Left side */}
-          <Grid xs={12} sm={9}>
-            {activeCard?.isCompleted &&
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            {/* Left side */}
+            <Grid xs={12} sm={9}>
+              {activeCard?.isCompleted &&
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <TaskAltOutlinedIcon color={activeCard?.isCompleted ? 'success' : 'disabled'} />
@@ -297,9 +300,9 @@ function ActiveCard({ board }) {
                 </Typography>
               </Box>
             </Box>
-            }
+              }
 
-            {activeCard?.labelIds.length !== 0 &&
+              {activeCard?.labelIds.length !== 0 &&
             <>
               <Typography>Labels</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt:1, mb: 2, flexWrap: 'wrap' }}>
@@ -326,8 +329,8 @@ function ActiveCard({ board }) {
                 </IconButton>
               </Box>
             </>
-            }
-            {isWatching &&
+              }
+              {isWatching &&
               <Box
                 sx={{
                   display: 'flex',
@@ -351,8 +354,8 @@ function ActiveCard({ board }) {
                   Tracking card
               </Box>
 
-            }
-            {activeCard?.dueDate &&
+              }
+              {activeCard?.dueDate &&
               <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" sx={{
                   display: 'block',
@@ -386,32 +389,32 @@ function ActiveCard({ board }) {
                   }
                 </Typography>
               </Box>
-            }
+              }
 
-            <Box sx={{ mb: 3 }}>
-              <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>
+              <Box sx={{ mb: 3 }}>
+                <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Members</Typography>
 
-              {/* Feature 02: Xử lý các thành viên của Card */}
-              <CardUserGroup
-                cardMemberIds={activeCard?.memberIds}
-                onUpdateCardMembers={onUpdateCardMembers}
-              />
-            </Box>
-
-            <Box sx={{ mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <SubjectRoundedIcon />
-                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Description</Typography>
+                {/* Feature 02: Xử lý các thành viên của Card */}
+                <CardUserGroup
+                  cardMemberIds={activeCard?.memberIds}
+                  onUpdateCardMembers={onUpdateCardMembers}
+                />
               </Box>
 
-              {/* Feature 03: Xử lý mô tả của Card */}
-              <CardDescriptionMdEditor
-                cardDescriptionProp={activeCard?.description}
-                handleUpdateCardDescription={onUpdateCardDescription}
-              />
-            </Box>
+              <Box sx={{ mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <SubjectRoundedIcon />
+                  <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Description</Typography>
+                </Box>
 
-            {activeCard?.attachments.length !==0 &&
+                {/* Feature 03: Xử lý mô tả của Card */}
+                <CardDescriptionMdEditor
+                  cardDescriptionProp={activeCard?.description}
+                  handleUpdateCardDescription={onUpdateCardDescription}
+                />
+              </Box>
+
+              {activeCard?.attachments.length !==0 &&
             <Box sx={{ mb: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <AttachmentIcon />
@@ -425,32 +428,32 @@ function ActiveCard({ board }) {
                 onUpdateCardAttachment={onUpdateCardAttachment}
               />
             </Box>
-            }
+              }
 
-            <Box sx={{ mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <DvrOutlinedIcon />
-                <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Comments</Typography>
+              <Box sx={{ mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <DvrOutlinedIcon />
+                  <Typography variant="span" sx={{ fontWeight: '600', fontSize: '20px' }}>Comments</Typography>
+                </Box>
+
+                {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
+                <CardActivitySection
+                  cardComments={activeCard?.comments}
+                  onAddCardComment= {onAddCardComment}
+                  onUpdateCardComment= {onUpdateCardComment}
+                  onDeleteCardComment= {onDeleteCardComment}
+                  onUpdateCardCommentReactions= {onUpdateCardCommentReactions}
+                />
               </Box>
+            </Grid>
 
-              {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-              <CardActivitySection
-                cardComments={activeCard?.comments}
-                onAddCardComment= {onAddCardComment}
-                onUpdateCardComment= {onUpdateCardComment}
-                onDeleteCardComment= {onDeleteCardComment}
-                onUpdateCardCommentReactions= {onUpdateCardCommentReactions}
-              />
-            </Box>
-          </Grid>
-
-          {/* Right side */}
-          <Grid xs={12} sm={3}>
-            <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Add To Card</Typography>
-            <Stack direction="column" spacing={1}>
-              {/* Feature 05: Xử lý hành động bản thân user tự join vào card */}
-              {/* Nếu user hiện tại đang đăng nhập chưa thuộc mảng memberIds của card thì mới cho hiện nút Join ra */}
-              {!activeCard?.memberIds?.includes(currentUser._id) &&
+            {/* Right side */}
+            <Grid xs={12} sm={3}>
+              <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Add To Card</Typography>
+              <Stack direction="column" spacing={1}>
+                {/* Feature 05: Xử lý hành động bản thân user tự join vào card */}
+                {/* Nếu user hiện tại đang đăng nhập chưa thuộc mảng memberIds của card thì mới cho hiện nút Join ra */}
+                {!activeCard?.memberIds?.includes(currentUser._id) &&
                 <SidebarItem
                   className="active"
                   onClick={() => onUpdateCardMembers({ userId: currentUser._id, action: CARD_MEMBER_ACTION.ADD })}
@@ -458,8 +461,8 @@ function ActiveCard({ board }) {
                   <PersonOutlineOutlinedIcon fontSize="small" />
                   Join
                 </SidebarItem>
-              }
-              {activeCard?.memberIds?.includes(currentUser._id) &&
+                }
+                {activeCard?.memberIds?.includes(currentUser._id) &&
                 <SidebarItem
                   className="active"
                   onClick={() => onUpdateCardMembers({ userId: currentUser._id, action: CARD_MEMBER_ACTION.REMOVE })}
@@ -467,51 +470,57 @@ function ActiveCard({ board }) {
                   <LogoutIcon fontSize="small" />
                   Leave
                 </SidebarItem>
-              }
-              {/* Feature 06: Xử lý hành động cập nhật ảnh Cover của Card */}
-              <SidebarItem className="active" component="label">
-                <ImageOutlinedIcon fontSize="small" />
+                }
+                {/* Feature 06: Xử lý hành động cập nhật ảnh Cover của Card */}
+                <SidebarItem className="active" component="label">
+                  <ImageOutlinedIcon fontSize="small" />
                 Cover
-                <VisuallyHiddenInput type="file" onChange={onUploadCardCover} />
-              </SidebarItem>
-              <CardAttachment onUploadAttach= {onUploadAttach}/>
-              <SidebarItem onClick={() => setIsOpenLabelModal(true)}><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
-              <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)} onUpdateBoardCustomLabels={onUpdateBoardCustomLabels}/>
-              <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
-              <SidebarItem className="active" onClick={() => setIsOpenDatesModal(true)}><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
-              <SidebarItem className="active" onClick={toggleWatch}><RemoveRedEyeIcon fontSize="small" />Monitor</SidebarItem>
-              <CardDatesModal
-                open={isOpenDatesModal}
-                onClose={() => setIsOpenDatesModal(false)}
-                card={activeCard}
-                onUpdateCardDates={onUpdateCardDates}
-              />
-              <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
-            </Stack>
+                  <VisuallyHiddenInput type="file" onChange={onUploadCardCover} />
+                </SidebarItem>
+                <CardAttachment onUploadAttach= {onUploadAttach}/>
+                <SidebarItem onClick={() => setIsOpenLabelModal(true)}><LocalOfferOutlinedIcon fontSize="small" />Labels</SidebarItem>
+                <CardLabelModal cardLabelIds={activeCard?.labelIds} onUpdateCardLabel= {onUpdateCardLabel} board={board} isOpen={isOpenLabelModal} onClose={() => setIsOpenLabelModal(false)} onUpdateBoardCustomLabels={onUpdateBoardCustomLabels}/>
+                <SidebarItem className="active" onClick={() => callApiUpdateCard({ isCompleted: !activeCard?.isCompleted })}><TaskAltOutlinedIcon fontSize="small"/>{activeCard?.isCompleted ? 'Mark as Incomplete' : 'Mark as Complete'}</SidebarItem>
+                <SidebarItem className="active" onClick={() => setIsOpenDatesModal(true)}><WatchLaterOutlinedIcon fontSize="small" />Dates</SidebarItem>
+                <SidebarItem className="active" onClick={toggleWatch}><RemoveRedEyeIcon fontSize="small" />Monitor</SidebarItem>
+                <CardDatesModal
+                  open={isOpenDatesModal}
+                  onClose={() => setIsOpenDatesModal(false)}
+                  card={activeCard}
+                  onUpdateCardDates={onUpdateCardDates}
+                />
+                <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
+              </Stack>
 
-            <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 2 }} />
 
-            {/* <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Power-Ups</Typography>
+              {/* <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Power-Ups</Typography>
             <Stack direction="column" spacing={1}>
               <SidebarItem><AspectRatioOutlinedIcon fontSize="small" />Card Size</SidebarItem>
               <SidebarItem><AddToDriveOutlinedIcon fontSize="small" />Google Drive</SidebarItem>
               <SidebarItem><AddOutlinedIcon fontSize="small" />Add Power-Ups</SidebarItem>
             </Stack> */}
 
-            <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 2 }} />
 
-            <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Actions</Typography>
-            <Stack direction="column" spacing={1}>
-              <SidebarItem><ArrowForwardOutlinedIcon fontSize="small" />Move</SidebarItem>
-              <SidebarItem><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
-              <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem>
-              <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem>
-              <SidebarItem><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
-            </Stack>
+              <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Actions</Typography>
+              <Stack direction="column" spacing={1}>
+                <SidebarItem><ArrowForwardOutlinedIcon fontSize="small" />Move</SidebarItem>
+                <SidebarItem onClick={() => {setOpenCopyModal(true)}}><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
+                <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem>
+                <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem>
+                <SidebarItem><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
+              </Stack>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-    </Modal>
+        </Box>
+      </Modal>
+      <CardCopyModal
+        isOpen={openCopyModal}
+        onClose={() => setOpenCopyModal(false)}
+        card={activeCard}
+      />
+    </>
   )
 }
 

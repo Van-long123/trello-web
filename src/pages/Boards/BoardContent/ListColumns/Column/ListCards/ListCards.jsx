@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box'
 import Card from './Card/Card'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+
 function ListCards({ cards }) {
   const itemIds = cards?.map(card => card._id)
   return (

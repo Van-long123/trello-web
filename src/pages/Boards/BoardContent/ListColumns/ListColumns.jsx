@@ -15,7 +15,8 @@ import {
   selectorCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import CardCopyModal from '~/components/Modal/CardCopyModal'
+import ColumnCopyModal from '~/components/Modal/ColumnCopyModal'
+
 function ListColumns({ columns }) {
   const board = useSelector(selectorCurrentActiveBoard)
   const dispatch = useDispatch()
@@ -167,7 +168,7 @@ function ListColumns({ columns }) {
           }
         </Box>
       </SortableContext>
-      <CardCopyModal
+      <ColumnCopyModal
         isOpen={openCopyModal}
         onClose={() => setOpenCopyModal(false)}
         column={selectedColumn}

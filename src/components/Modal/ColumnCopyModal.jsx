@@ -3,50 +3,65 @@ import { useEffect, useState } from 'react'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Button, FormControl, IconButton, InputLabel, MenuItem, Select } from '@mui/material'
+import { Button, IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateCurrentActiveBoard, selectorCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { toast } from 'react-toastify'
-import { createNewCardCopyAPI } from '~/apis'
+import { createNewColumnAPI, createNewColumnCopyAPI } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { cloneDeep } from 'lodash'
-function CardCopyModal({ isOpen, onClose, card }) {
+
+function ColumnCopyModal({ isOpen, onClose, column }) {
   const dispatch = useDispatch()
   const board = useSelector(selectorCurrentActiveBoard)
-  const [selectedColumnId, setSelectedColumnId] = useState('')
-  const [selectedPosition, setSelectedPosition] = useState(1)
   const [title, setTitle] = useState('')
   useEffect(() => {
-    if (card) {
-      setTitle(card.title)
-      setSelectedColumnId(card.columnId || board?.columns[0]?._id)
+    if (column) {
+      setTitle(column.title)
     }
-  }, [card, board])
-  const currentColumn = board?.columns?.find(col => col._id == selectedColumnId)
-  const maxPosition = currentColumn ? currentColumn.cardOrderIds.length + 1 : 1
+  }, [column])
   const handleCopy = async () => {
-    // eslint-disable-next-line no-unused-vars
-    const { _id, ...resCard } = card
-    console.log('🚀 ~ handleCopy ~ card:', card)
-    const newCard = {
-      title,
-      columnId: selectedColumnId,
-      position: selectedPosition,
-      card: resCard
+    if (!title.trim()) {
+      toast.error('Please enter a title')
+      return
     }
-    console.log('🚀 ~ handleCopy ~ resCard:', resCard)
-    createNewCardCopyAPI(newCard).then(createdCard => {
-      console.log('🚀 ~ handleCopy ~ newCard:', createdCard)
+
+    const columnCopy = board.columns.find(c => c._id === column._id)
+    // eslint-disable-next-line no-unused-vars
+    let cardsWithoutId = columnCopy.cards.map(({ _id, ...rest }) => rest)
+    if (cardsWithoutId[0].FE_PlaceHolderCard) {
+      cardsWithoutId = []
+    }
+    const newColumn = {
+      title,
+      boardId: board._id,
+      cards: cardsWithoutId
+    }
+    createNewColumnCopyAPI(newColumn).then((res) => {
+      const createdColumn = res?.getNewColumn
+      if (res?.createdCards.length > 0) {
+        createdColumn.cards = res?.createdCards
+        createdColumn.cardOrderIds = res?.createdCards.map(card => card._id)
+      } else {
+        createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+        createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+      }
       const newBoard = cloneDeep(board)
-      const column = newBoard.columns.find(col => col._id == createdCard.columnId)
-      column.cardOrderIds.splice(selectedPosition - 1, 0, createdCard._id)
-      column.cards.splice(selectedPosition - 1, 0, createdCard)
+      newBoard.columns.push(createdColumn)
+      newBoard.columnOrderIds.push(createdColumn._id)
       dispatch(updateCurrentActiveBoard(newBoard))
-      toast.success('Card copied successfully!')
       onClose()
     })
+    // createNewColumnAPI(newColumn).then((res) => {
+    //   const createdColumn = res?.getNewColumn
+    //   const newBoard = cloneDeep(board)
+    //   newBoard.columns.push(createdColumn)
+    //   newBoard.columnOrderIds.push(createdColumn._id)
+    //   dispatch(updateCurrentActiveBoard(newBoard))
+    //   onClose()
+    // })
   }
   return (
     <>
@@ -79,9 +94,9 @@ function CardCopyModal({ isOpen, onClose, card }) {
             justifyContent: 'space-between'
           }}>
             <Typography variant="h6" sx={{ fontSize: '17px', flex: 1, textAlign: 'center' }}>
-              Copy card
+              Copy list
             </Typography>
-            <IconButton onClick={onClose}><CloseIcon sx={{ fontSize: '17px', cursor: 'pointer' }}/></IconButton>
+            <IconButton onClick={onClose}><CloseIcon sx={{ fontSize: '17px', cursor: 'pointer', }}/></IconButton>
           </Box>
           <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>Title</Typography>
           {/* TextareaAutosize bằng Box + component={TextareaAutosize} → nhờ đó có thể dùng luôn sx. */}
@@ -105,47 +120,11 @@ function CardCopyModal({ isOpen, onClose, card }) {
               mb: 1
             }}
           />
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 2,
-            mb: 2
-          }}>
-            <FormControl sx={{ flex: 1 }}>
-              <InputLabel>Lists</InputLabel>
-              <Select
-                value={selectedColumnId}
-                label="List"
-                onChange={(e) => {
-                  setSelectedColumnId(e.target.value)
-                  setSelectedPosition(1)
-                }}
-              >
-                {board?.columns?.map((col) => (
-                  <MenuItem key={col._id} value={col._id}>
-                    {col.title}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ maxWidth: '80px', width: '100%' }}>
-              <InputLabel>Positions</InputLabel>
-              <Select
-                value={selectedPosition}
-                label="Position"
-                onChange={(e) => setSelectedPosition(Number(e.target.value))}
-              >
-                {Array.from({ length: maxPosition }, (_, i) => i + 1).map(pos => (
-                  <MenuItem key={pos} value={pos}>{pos}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-          <Button variant="contained" color='primary' onClick={handleCopy}>Create card</Button>
+          <Button variant="contained" color='primary' onClick={handleCopy}>Create a list</Button>
         </Box>
       </Modal>
     </>
   )
 }
 
-export default CardCopyModal
+export default ColumnCopyModal
