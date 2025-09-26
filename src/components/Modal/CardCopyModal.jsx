@@ -36,7 +36,6 @@ function CardCopyModal({ isOpen, onClose, card }) {
       position: selectedPosition,
       card: resCard
     }
-    console.log('🚀 ~ handleCopy ~ resCard:', resCard)
     createNewCardCopyAPI(newCard).then(createdCard => {
       console.log('🚀 ~ handleCopy ~ newCard:', createdCard)
       const newBoard = cloneDeep(board)

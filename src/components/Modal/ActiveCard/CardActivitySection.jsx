@@ -37,6 +37,7 @@ function CardActivitySection({ cardComments = [], onAddCardComment, onUpdateCard
       }
       onAddCardComment(commentToAdd).then(() => {
         event.target.value=''
+        setCommentInput('')
       })
     }
   }
