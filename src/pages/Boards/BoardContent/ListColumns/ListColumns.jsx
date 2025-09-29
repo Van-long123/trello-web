@@ -16,15 +16,22 @@ import {
 } from '~/redux/activeBoard/activeBoardSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import ColumnCopyModal from '~/components/Modal/ColumnCopyModal'
+import ColumnMoveModal from '~/components/Modal/ColumnMoveModal'
 
 function ListColumns({ columns }) {
   const board = useSelector(selectorCurrentActiveBoard)
   const dispatch = useDispatch()
   const [openCopyModal, setOpenCopyModal] = useState(false)
+  const [openMoveModal, setOpenMoveModal] = useState(false)
   const [selectedColumn, setSelectedColumn] = useState(null)
   const handleOpenCopyModal = (column) => {
     setSelectedColumn(column)
     setOpenCopyModal(true)
+  }
+  const handleOpenMoveModal = (column) => {
+    console.log('🚀 ~ handleOpenMoveModal ~ column:', column)
+    setSelectedColumn(column)
+    setOpenMoveModal(true)
   }
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
@@ -81,6 +88,7 @@ function ListColumns({ columns }) {
               key={column._id}
               column={column}
               onOpenCopyModal={handleOpenCopyModal}
+              onOpenMoveModal={handleOpenMoveModal}
             />
           )}
           {/* <Column /> */}
@@ -171,6 +179,11 @@ function ListColumns({ columns }) {
       <ColumnCopyModal
         isOpen={openCopyModal}
         onClose={() => setOpenCopyModal(false)}
+        column={selectedColumn}
+      />
+      <ColumnMoveModal
+        isOpen={openMoveModal}
+        onClose={() => setOpenMoveModal(false)}
         column={selectedColumn}
       />
     </>

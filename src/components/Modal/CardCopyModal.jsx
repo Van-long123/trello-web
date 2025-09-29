@@ -10,7 +10,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { updateCurrentActiveBoard, selectorCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { toast } from 'react-toastify'
 import { createNewCardCopyAPI } from '~/apis'
-import { generatePlaceholderCard } from '~/utils/formatters'
 import { cloneDeep } from 'lodash'
 function CardCopyModal({ isOpen, onClose, card }) {
   const dispatch = useDispatch()
@@ -29,7 +28,6 @@ function CardCopyModal({ isOpen, onClose, card }) {
   const handleCopy = async () => {
     // eslint-disable-next-line no-unused-vars
     const { _id, ...resCard } = card
-    console.log('🚀 ~ handleCopy ~ card:', card)
     const newCard = {
       title,
       columnId: selectedColumnId,
@@ -37,7 +35,6 @@ function CardCopyModal({ isOpen, onClose, card }) {
       card: resCard
     }
     createNewCardCopyAPI(newCard).then(createdCard => {
-      console.log('🚀 ~ handleCopy ~ newCard:', createdCard)
       const newBoard = cloneDeep(board)
       const column = newBoard.columns.find(col => col._id == createdCard.columnId)
       column.cardOrderIds.splice(selectedPosition - 1, 0, createdCard._id)

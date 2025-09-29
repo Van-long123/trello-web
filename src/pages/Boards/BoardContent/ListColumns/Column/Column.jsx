@@ -35,7 +35,7 @@ import { Eye } from 'lucide-react'
 import DoneIcon from '@mui/icons-material/Done'
 import { selectorCurrentUser } from '~/redux/user/userSlice'
 
-function Column({ column, onOpenCopyModal }) {
+function Column({ column, onOpenCopyModal, onOpenMoveModal }) {
   const board = useSelector(selectorCurrentActiveBoard)
   const dispatch = useDispatch()
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -247,9 +247,9 @@ function Column({ column, onOpenCopyModal }) {
                 <ListItemIcon><AddCardIcon className= "add-card-icon" fontSize="small" /></ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
-              <MenuItem>
+              <MenuItem onClick={() => onOpenMoveModal(column)}>
                 <ListItemIcon><ContentCut fontSize="small" /></ListItemIcon>
-                <ListItemText>Cut</ListItemText>
+                <ListItemText>Move</ListItemText>
               </MenuItem>
               <MenuItem onClick={() => onOpenCopyModal(column)}>
                 <ListItemIcon><ContentCopy fontSize="small" /></ListItemIcon>
