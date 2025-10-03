@@ -49,6 +49,7 @@ import dayjs from 'dayjs'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import { Eye } from 'lucide-react'
 import CardCopyModal from '../CardCopyModal'
+import CardMoveModal from '../CardMoveModal'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -82,6 +83,7 @@ function ActiveCard({ board }) {
   const [isOpenDatesModal, setIsOpenDatesModal] = useState(false)
   const isWatching = activeCard?.watchers.includes(currentUser._id)
   const [openCopyModal, setOpenCopyModal] = useState(false)
+  const [openMoveModal, setOpenMoveModal] = useState(false)
 
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
@@ -505,7 +507,7 @@ function ActiveCard({ board }) {
 
               <Typography sx={{ fontWeight: '600', color: 'primary.main', mb: 1 }}>Actions</Typography>
               <Stack direction="column" spacing={1}>
-                <SidebarItem><ArrowForwardOutlinedIcon fontSize="small" />Move</SidebarItem>
+                <SidebarItem onClick={() => setOpenMoveModal(true)}><ArrowForwardOutlinedIcon fontSize="small" />Move</SidebarItem>
                 <SidebarItem onClick={() => {setOpenCopyModal(true)}}><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
                 <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem>
                 <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem>
@@ -518,6 +520,11 @@ function ActiveCard({ board }) {
       <CardCopyModal
         isOpen={openCopyModal}
         onClose={() => setOpenCopyModal(false)}
+        card={activeCard}
+      />
+      <CardMoveModal
+        isOpen={openMoveModal}
+        onClose={() => setOpenMoveModal(false)}
         card={activeCard}
       />
     </>

@@ -255,10 +255,10 @@ function Column({ column, onOpenCopyModal, onOpenMoveModal }) {
                 <ListItemIcon><ContentCopy fontSize="small" /></ListItemIcon>
                 <ListItemText>Copy</ListItemText>
               </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 <ListItemIcon><ContentPaste fontSize="small" /></ListItemIcon>
                 <ListItemText>Paste</ListItemText>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem onClick={toggleWatch}>
                 <ListItemIcon><RemoveRedEyeIcon fontSize="small" /></ListItemIcon>
                 <ListItemText>Monitor</ListItemText>
@@ -274,10 +274,10 @@ function Column({ column, onOpenCopyModal, onOpenMoveModal }) {
                 <ListItemIcon><DeleteForeverIcon className="delete-forever-icon" fontSize="small" /></ListItemIcon>
                 <ListItemText>Delete this column</ListItemText>
               </MenuItem>
-              <MenuItem>
+              {/* <MenuItem>
                 <ListItemIcon><Cloud fontSize="small" /></ListItemIcon>
                 <ListItemText>Archive this column</ListItemText>
-              </MenuItem>
+              </MenuItem> */}
             </Menu>
           </Box>
           {/*List Cards*/}

@@ -18,9 +18,15 @@ function CardCopyModal({ isOpen, onClose, card }) {
   const [selectedPosition, setSelectedPosition] = useState(1)
   const [title, setTitle] = useState('')
   useEffect(() => {
-    if (card) {
+    if (card && board) {
+      const colId = card.columnId || board?.columns[0]?._id
       setTitle(card.title)
-      setSelectedColumnId(card.columnId || board?.columns[0]?._id)
+      setSelectedColumnId(colId)
+
+      const column = board?.columns?.find(col => col._id === colId)
+
+      const cardIndex = column?.cardOrderIds.findIndex(id => id === card._id)
+      setSelectedPosition(cardIndex !== -1 ? cardIndex + 1 : 1)
     }
   }, [card, board])
   const currentColumn = board?.columns?.find(col => col._id == selectedColumnId)
@@ -124,7 +130,7 @@ function CardCopyModal({ isOpen, onClose, card }) {
                 ))}
               </Select>
             </FormControl>
-            <FormControl sx={{ maxWidth: '80px', width: '100%' }}>
+            <FormControl sx={{ maxWidth: '100px', width: '100%' }}>
               <InputLabel>Positions</InputLabel>
               <Select
                 value={selectedPosition}
