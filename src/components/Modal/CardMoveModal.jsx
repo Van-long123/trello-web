@@ -171,7 +171,7 @@ function CardMoveModal({ isOpen, onClose, card }) {
               </Select>
             </FormControl>
           </Box>
-          <Button variant="contained" color='primary' onClick={handleMove}>Create card</Button>
+          <Button variant="contained" color='primary' onClick={handleMove}>Move card</Button>
         </Box>
       </Modal>
     </>
