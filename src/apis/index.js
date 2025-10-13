@@ -29,6 +29,11 @@ export const updateColumnDetailsAPI = async (columnId, updateData) => {
   return response.data
 }
 
+export const MoveColumnDetailsAPI = async (columnId, updateData) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/columns/move/${columnId}`, updateData)
+  return response.data
+}
+
 export const deleteColumnDetailsAPI = async (columnId) => {
   const response = await authorizedAxiosInstance.delete(`${API_ROOT}/v1/columns/${columnId}`)
   return response.data
@@ -69,6 +74,11 @@ export const refreshTokenApi = async () => {
 
 export const fetchBoardsApi = async (searchPath) => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards${searchPath}`)
+  return response.data
+}
+
+export const fetchBoardsFullApi = async () => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards/full`)
   return response.data
 }
 

@@ -3,38 +3,78 @@ import { useEffect, useState } from 'react'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Button, FormControl, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Button, FormControl, IconButton, MenuItem, Select } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import TextareaAutosize from '@mui/material/TextareaAutosize'
 import { useSelector, useDispatch } from 'react-redux'
 import { updateCurrentActiveBoard, selectorCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
-import { toast } from 'react-toastify'
-import { createNewCardCopyAPI, updateBoardDetailsAPI } from '~/apis'
+import { fetchBoardsFullApi, MoveColumnDetailsAPI, updateBoardDetailsAPI, updateColumnDetailsAPI } from '~/apis'
 import { cloneDeep } from 'lodash'
 import { arrayMove } from '@dnd-kit/sortable'
+
 function ColumnMoveModal({ isOpen, onClose, column }) {
-  console.log('🚀 ~ ColumnMoveModal ~ isOpen:', isOpen)
   const dispatch = useDispatch()
   const board = useSelector(selectorCurrentActiveBoard)
   const [selectedPosition, setSelectedPosition] = useState(1)
-  const [title, setTitle] = useState('')
+  const [selectedBoardId, setSelectedBoardId] = useState(board?._id)
+  const [boards, setBoards] = useState(null)
+  const [maxPosition, setMaxPosition] = useState(1)
+
   useEffect(() => {
-    if (column) {
-      setTitle(column.title)
+    if (isOpen) {
+      fetchBoardsFullApi().then(data => setBoards(data))
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    const boardTarget = boards?.find(b => b._id === selectedBoardId)
+    const count = boardTarget?.columns?.length || 0
+    setMaxPosition(count > 0 ? count + 1 : 1)
+    if (selectedBoardId === board._id) {
       const currentPosition = board?.columns?.findIndex(c => c._id === column?._id) + 1
       setSelectedPosition(currentPosition)
+    } else {
+      setSelectedPosition(1)
     }
-  }, [column, board])
-  const maxPosition = board?.columns?.length > 0 ? board?.columns?.length : 1
+  }, [selectedBoardId, boards, column, board])
   const handleMove = async () => {
-    const positionOld = board?.columns?.findIndex(c => c._id === column?._id) + 1
-    const orderedColumns = arrayMove(board?.columns, positionOld - 1, selectedPosition - 1)
-    const orderedColumnsIds = orderedColumns.map(c => c._id)
+    const fromBoardId = board._id
+    const toBoardId = selectedBoardId
     const newBoard = cloneDeep(board)
-    newBoard.columns = orderedColumns
-    newBoard.columnOrderIds = orderedColumnsIds
-    dispatch(updateCurrentActiveBoard(newBoard))
-    updateBoardDetailsAPI(newBoard._id, { columnOrderIds: orderedColumnsIds })
+    if (toBoardId === fromBoardId) {
+      const positionOld = board?.columns?.findIndex(c => c._id === column?._id) + 1
+      const orderedColumns = arrayMove(board?.columns, positionOld - 1, selectedPosition - 1)
+      const orderedColumnsIds = orderedColumns.map(c => c._id)
+      newBoard.columns = orderedColumns
+      newBoard.columnOrderIds = orderedColumnsIds
+      dispatch(updateCurrentActiveBoard(newBoard))
+      updateBoardDetailsAPI(newBoard._id, { columnOrderIds: orderedColumnsIds })
+    } else {
+      const newBoards = cloneDeep(boards)
+      const fromBoard = newBoards.find(b => b._id === fromBoardId)
+      const toBoard = newBoards.find(b => b._id === toBoardId)
+      if (!fromBoard || !toBoard) return
+      // Xóa column khỏi board cũ
+      newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
+      newBoard.columnOrderIds = newBoard.columns.map(c => c._id)
+      fromBoard.columns = newBoard.columns
+      fromBoard.columnOrderIds = newBoard.columnOrderIds
+
+      // Thêm column vào board mới
+      const columnClone = cloneDeep(column)
+      const insertIndex = selectedPosition - 1
+      columnClone.boardId = toBoardId
+      toBoard.columns.splice(insertIndex, 0, columnClone)
+      toBoard.columnOrderIds = toBoard.columns.map(c => c._id)
+
+      // Gọi API cập nhật DB
+      await Promise.all([
+        updateBoardDetailsAPI(fromBoardId, { columnOrderIds: fromBoard.columnOrderIds }),
+        updateBoardDetailsAPI(toBoardId, { columnOrderIds:toBoard.columnOrderIds }),
+        MoveColumnDetailsAPI(column._id, { boardId: toBoardId, cardOrderIds: column.cardOrderIds })
+      ])
+      setBoards(newBoards)
+      dispatch(updateCurrentActiveBoard(newBoard))
+    }
     onClose()
   }
   return (
@@ -72,7 +112,6 @@ function ColumnMoveModal({ isOpen, onClose, column }) {
             </Typography>
             <IconButton onClick={onClose}><CloseIcon sx={{ fontSize: '17px', cursor: 'pointer' }}/></IconButton>
           </Box>
-          <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>Title</Typography>
           <Box sx={{
             display: 'flex',
             flexDirection:'column',
@@ -80,16 +119,23 @@ function ColumnMoveModal({ isOpen, onClose, column }) {
             gap: 1,
             mb: 2
           }}>
-            <TextField
-              id="outlined-read-only-input"
-              value={title}
-              slotProps={{
-                input: {
-                  readOnly: true
-                }
-              }}
-              fullWidth
-            />
+            <FormControl fullWidth>
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>Information board</Typography>
+              {boards &&
+              <Select
+                value={selectedBoardId}
+                displayEmpty
+                inputProps={{ 'aria-label': 'Without label' }}
+                onChange={(e) => {
+                  setSelectedBoardId(e.target.value)
+                }}
+              >
+                {boards?.map(board => (
+                  <MenuItem key={board?._id} value={board?._id}>{board?.title}</MenuItem>
+                ))}
+              </Select>
+              }
+            </FormControl>
             <FormControl fullWidth>
               <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>Position</Typography>
               <Select

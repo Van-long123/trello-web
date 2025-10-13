@@ -491,7 +491,7 @@ function ActiveCard({ board }) {
                   card={activeCard}
                   onUpdateCardDates={onUpdateCardDates}
                 />
-                <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem>
+                {/* <SidebarItem><AutoFixHighOutlinedIcon fontSize="small" />Custom Fields</SidebarItem> */}
               </Stack>
 
               <Divider sx={{ my: 2 }} />
@@ -509,8 +509,8 @@ function ActiveCard({ board }) {
               <Stack direction="column" spacing={1}>
                 <SidebarItem onClick={() => setOpenMoveModal(true)}><ArrowForwardOutlinedIcon fontSize="small" />Move</SidebarItem>
                 <SidebarItem onClick={() => {setOpenCopyModal(true)}}><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
-                <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem>
-                <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem>
+                {/* <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem> */}
+                {/* <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem> */}
                 <SidebarItem><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
               </Stack>
             </Grid>
