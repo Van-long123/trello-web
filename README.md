@@ -188,7 +188,14 @@ src/
 
 - **Trình soạn thảo Markdown**: Thêm mô tả chi tiết cho thẻ với định dạng Markdown
 - **Quản lý thành viên**: Thêm/xóa thành viên cho từng thẻ
-
+- **Cover:** Đặt ảnh nền cho thẻ  
+- **Attachment:** Đính kèm tệp, hình ảnh hoặc liên kết  
+- **Labels:** Gắn nhãn màu để phân loại công việc  
+- **Mark as Complete:** Đánh dấu hoàn thành thẻ  
+- **Dates:** Quản lý thời gian bắt đầu và hạn chót  
+- **Monitor:** Theo dõi tiến độ của thẻ  
+- **Move / Copy:** Di chuyển hoặc sao chép thẻ giữa các danh sách
+  
 ### Thông báo hệ thống
 
 - **Thông báo Toast**: Hiển thị thông báo khi thực hiện các hành động
