@@ -212,7 +212,7 @@ function CardMoveModal({ isOpen, onClose, card }) {
               {hasColumn && Array.from({ length: maxPosition }, (_, i) => i + 1).map(pos => (
                 <MenuItem key={pos} value={pos}>{pos}</MenuItem>
               ))
-              } 
+              }
             </Select>
           </FormControl>
         </Box>

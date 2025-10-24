@@ -9,6 +9,12 @@ import Tooltip from '@mui/material/Tooltip'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
 import InviteBoardUser from './InviteBoardUser'
+import { useState } from 'react'
+import { updateBoardDetailsAPI } from '~/apis'
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { updateCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
+import { cloneDeep } from 'lodash'
 
 const MENU_STYLE = {
   color: 'white',
@@ -27,6 +33,20 @@ const MENU_STYLE = {
   }
 }
 function BoardBar({ board }) {
+  const dispatch = useDispatch()
+  const [isPublic, setIsPublic] = useState(board?.type === 'public')
+  const handleToggleVisibility = async () => {
+    const newType = isPublic ? 'private' : 'public'
+    try {
+      await updateBoardDetailsAPI(board._id, { type: newType })
+      const newBoard = cloneDeep(board)
+      newBoard.type = newType
+      dispatch(updateCurrentActiveBoard(newBoard))
+      setIsPublic(!isPublic)
+    } catch (error) {
+      toast.error('Error, Please try again')
+    }
+  }
   return (
     <>
       <Box sx={{
@@ -53,8 +73,9 @@ function BoardBar({ board }) {
           <Chip
             sx={MENU_STYLE}
             icon={<VpnLockIcon />}
-            label={capitalizeFirstLetter(board?.type)}
+            label={isPublic ? 'Public' : 'Private'}
             clickable
+            onClick={handleToggleVisibility}
           />
           <Chip
             sx={MENU_STYLE}
