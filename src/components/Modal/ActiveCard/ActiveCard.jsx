@@ -50,6 +50,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import { Eye } from 'lucide-react'
 import CardCopyModal from '../CardCopyModal'
 import CardMoveModal from '../CardMoveModal'
+import CardShareModal from '../CardShareModal'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -84,6 +85,7 @@ function ActiveCard({ board }) {
   const isWatching = activeCard?.watchers.includes(currentUser._id)
   const [openCopyModal, setOpenCopyModal] = useState(false)
   const [openMoveModal, setOpenMoveModal] = useState(false)
+  const [openShareModal, setOpenShareModal] = useState(false)
 
   // const [isOpen, setIsOpen] = useState(true)
   // const handleOpenModal = () => setIsOpen(true)
@@ -511,7 +513,7 @@ function ActiveCard({ board }) {
                 <SidebarItem onClick={() => {setOpenCopyModal(true)}}><ContentCopyOutlinedIcon fontSize="small" />Copy</SidebarItem>
                 {/* <SidebarItem><AutoAwesomeOutlinedIcon fontSize="small" />Make Template</SidebarItem> */}
                 {/* <SidebarItem><ArchiveOutlinedIcon fontSize="small" />Archive</SidebarItem> */}
-                <SidebarItem><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
+                <SidebarItem onClick={() => {setOpenShareModal(true)}}><ShareOutlinedIcon fontSize="small" />Share</SidebarItem>
               </Stack>
             </Grid>
           </Grid>
@@ -525,6 +527,12 @@ function ActiveCard({ board }) {
       <CardMoveModal
         isOpen={openMoveModal}
         onClose={() => setOpenMoveModal(false)}
+        card={activeCard}
+      />
+
+      <CardShareModal
+        isOpen={openShareModal}
+        onClose={() => setOpenShareModal(false)}
         card={activeCard}
       />
     </>

@@ -8,6 +8,7 @@ import { selectorCurrentUser } from '~/redux/user/userSlice'
 import Settings from '~/pages/Settings/Settings'
 import Boards from './pages/Boards'
 import LoginSuccess from './pages/Auth/LoginSuccess'
+import CardPublicViewModal from './components/Modal/CardPublicViewModal'
 
 const ProtectedRouter = ({ user }) => {
   if (!user) return <Navigate to='/login' replace={true} />
@@ -48,6 +49,9 @@ function App() {
 
       {/* Google */}
       <Route path='/login-success' element={ <LoginSuccess /> } />
+
+      {/* Share Card */}
+      <Route path='/share/card/:shareToken' element={ <CardPublicViewModal /> } />
 
     </Routes>
   )

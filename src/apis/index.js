@@ -48,6 +48,22 @@ export const createNewCardAPI = async (newCardData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards`, newCardData)
   return response.data
 }
+
+export const shareTokenCardApi = async (cardId) => {
+  const response = await authorizedAxiosInstance.put(`${API_ROOT}/v1/cards/${cardId}/share`)
+  return response.data
+}
+
+export const sendShareCardEmail = async (cardId, data) => {
+  const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/${cardId}/share`, data )
+  return response.data
+}
+
+export const publicShareToken = async (shareToken) => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/cards/public/${shareToken}`)
+  return response.data
+}
+
 export const createNewCardCopyAPI = async (newColumnData) => {
   const response = await authorizedAxiosInstance.post(`${API_ROOT}/v1/cards/copy`, newColumnData)
   return response.data
@@ -76,6 +92,12 @@ export const fetchBoardsApi = async (searchPath) => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards${searchPath}`)
   return response.data
 }
+
+export const fetchBoardShareAPI = async (boardId) => {
+  const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards/${boardId}/share`)
+  return response.data
+}
+
 
 export const fetchBoardsFullApi = async () => {
   const response = await authorizedAxiosInstance.get(`${API_ROOT}/v1/boards/full`)
