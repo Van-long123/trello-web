@@ -12,7 +12,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CloseIcon from '@mui/icons-material/Close'
 // moment.locale('vi')
 
-const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardAttachment }) => {
+const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardAttachment, isReadOnly = false }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [openDialog, setOpenDialog] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
@@ -58,6 +58,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
     }
   }
   const handleAction = async (action) => {
+    if (isReadOnly) return
     switch (action) {
     case 'download':
     {
@@ -223,6 +224,7 @@ const AttachmentList = ({ attachments= [], onDeleteCardAttachment, onUpdateCardA
             variant="contained"
             color="primary"
             fullWidth
+            disabled={isReadOnly}
           >
             Update
           </Button>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useColorScheme } from '@mui/material/styles'
 import MDEditor from '@uiw/react-md-editor'
 import rehypeSanitize from 'rehype-sanitize'
@@ -10,7 +10,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
  * Vài ví dụ Markdown từ lib
  * https://www.markdownguide.org/basic-syntax/
  */
-function CardDescriptionMdEditor({ cardDescriptionProp, handleUpdateCardDescription }) {
+function CardDescriptionMdEditor({ cardDescriptionProp, handleUpdateCardDescription, isReadOnly = false }) {
   // Lấy giá trị 'dark', 'light' hoặc 'system' mode từ MUI để support phần Markdown bên dưới: data-color-mode={mode}
   // https://www.npmjs.com/package/@uiw/react-md-editor#support-dark-modenight-mode
   const { mode } = useColorScheme() // lấy ở localstorage
@@ -20,11 +20,34 @@ function CardDescriptionMdEditor({ cardDescriptionProp, handleUpdateCardDescript
   // State xử lý giá trị markdown khi chỉnh sửa
   const [cardDescription, setCardDescription] = useState(cardDescriptionProp)
 
+  useEffect(() => {
+    setCardDescription(cardDescriptionProp)
+  }, [cardDescriptionProp])
   const updateCardDescription = () => {
     setMarkdownEditMode(false)
     handleUpdateCardDescription(cardDescription)
   }
 
+  // Nếu ở chế độ read-only: chỉ hiển thị nội dung Markdown (preview)
+  if (isReadOnly) {
+    return (
+      <Box sx={{ mt: -4 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box data-color-mode={mode}>
+            <MDEditor.Markdown
+              source={cardDescription}
+              style={{
+                whiteSpace: 'pre-wrap',
+                padding: cardDescription ? '10px' : '0px',
+                border:  cardDescription ? '0.5px solid rgba(0, 0, 0, 0.2)' : 'none',
+                borderRadius: '8px'
+              }}
+            />
+          </Box>
+        </Box>
+      </Box>
+    )
+  }
   return (
     <Box sx={{ mt: -4 }}>
       {markdownEditMode
