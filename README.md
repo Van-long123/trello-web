@@ -195,6 +195,7 @@ src/
 - **Dates:** Quản lý thời gian bắt đầu và hạn chót  
 - **Monitor:** Theo dõi tiến độ của thẻ  
 - **Move / Copy:** Di chuyển hoặc sao chép thẻ giữa các danh sách
+- **Share:** Chia sẽ card đến thành viên khác
   
 ### Thông báo hệ thống
 
