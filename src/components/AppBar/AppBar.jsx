@@ -47,7 +47,7 @@ function AppBar() {
             </Box>
           </Link>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Workspaces />
+            {/* <Workspaces />
             <Recent />
             <Starred />
             <Templates />
@@ -63,7 +63,7 @@ function AppBar() {
               startIcon={<AddToPhotosIcon/>}
             >
               Create
-            </Button>
+            </Button> */}
           </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
