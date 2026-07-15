@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 import LockIcon from '@mui/icons-material/Lock'
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import Typography from '@mui/material/Typography'
 import { Card as MuiCard } from '@mui/material'
 import Alert from '@mui/material/Alert'
@@ -75,7 +76,7 @@ function LoginForm() {
     <form onSubmit={handleSubmit(submitLogIn)}>
       {/* MuiCard sẽ hiện ra sau 200ms với hiệu ứng phóng to dần. */}
       <Zoom in={true} style={{ transitionDelay: '200ms' }}>
-        <MuiCard sx={{ minWidth: 380, maxWidth: 380, marginTop: '6em' }}>
+        <MuiCard sx={{ minWidth: 380, maxWidth: 380, marginTop: '6em', marginBottom: '2em' }}>
           <Box sx={{
             margin: '1em',
             display: 'flex',
@@ -172,36 +173,38 @@ function LoginForm() {
               fontSize: '14px',
               color: (theme) => theme.palette.grey[600]
             }}>
-              Quick Demo
-            </Divider>
-          </Box>
-          <Box sx={{ padding: '0 1em 1em 1em', display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Button
-              onClick={handleDemoLogin}
-              variant="outlined"
-              color="primary"
-              size="large"
-              fullWidth
-              sx={{
-                fontSize: '16px',
-                fontWeight: 600,
-                paddingY: '10px',
-              }}
-            >
-              🚀 Demo User
-            </Button>
-          </Box>
-
-          <Box sx={{ padding: '0 1em', marginBottom: '1em' }}>
-            <Divider sx={{
-              fontSize: '14px',
-              color: (theme) => theme.palette.grey[600]
-            }}>
               Or continue with
             </Divider>
           </Box>
 
           <Box sx={{ padding: '0 1em 1em 1em', display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Button
+              onClick={handleDemoLogin}
+              variant="outlined"
+              color="inherit"
+              size="large"
+              fullWidth
+              startIcon={<RocketLaunchIcon fontSize="small" sx={{ color: '#1976d2' }} />}
+              sx={{
+                borderColor: theme => theme.palette.grey[400],
+                color: '#191919',
+                fontSize: '16px',
+                fontWeight: 400,
+                justifyContent: 'flex-start',
+                paddingY: '10px',
+                paddingLeft: '30px',
+                '&:hover': {
+                  borderColor: theme => theme.palette.grey[400],
+                  backgroundColor: theme => theme.palette.grey[50]
+                },
+                '& .MuiButton-startIcon': {
+                  marginRight: '15px'
+                }
+              }}
+            >
+              Continue as Demo User
+            </Button>
+
             <Button
               onClick={handleGoogleLogin}
               variant="outlined"
