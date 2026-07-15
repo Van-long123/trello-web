@@ -58,6 +58,19 @@ function LoginForm() {
     window.location.href = `${API_ROOT}/v1/users/facebook`
   }
 
+  const handleDemoLogin = () => {
+    const email = import.meta.env.VITE_DEMO_USER_EMAIL
+    const password = import.meta.env.VITE_DEMO_USER_PASSWORD
+    toast.promise(
+      dispatch(loginUserApi({ email, password })),
+      {
+        pending: 'Logging in...'
+      }
+    ).then((res) => {
+      if (!res.error) navigate('/')
+    })
+  }
+
   return (
     <form onSubmit={handleSubmit(submitLogIn)}>
       {/* MuiCard sẽ hiện ra sau 200ms với hiệu ứng phóng to dần. */}
@@ -154,6 +167,31 @@ function LoginForm() {
           </CardActions>
 
           {/* Divider với text "hoặc" */}
+          <Box sx={{ padding: '0 1em', marginBottom: '1em' }}>
+            <Divider sx={{
+              fontSize: '14px',
+              color: (theme) => theme.palette.grey[600]
+            }}>
+              Quick Demo
+            </Divider>
+          </Box>
+          <Box sx={{ padding: '0 1em 1em 1em', display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Button
+              onClick={handleDemoLogin}
+              variant="outlined"
+              color="primary"
+              size="large"
+              fullWidth
+              sx={{
+                fontSize: '16px',
+                fontWeight: 600,
+                paddingY: '10px',
+              }}
+            >
+              🚀 Demo User
+            </Button>
+          </Box>
+
           <Box sx={{ padding: '0 1em', marginBottom: '1em' }}>
             <Divider sx={{
               fontSize: '14px',

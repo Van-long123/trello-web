@@ -25,3 +25,8 @@ dist-ssr
 
 # Ignore ActiveCardErrorWatch.jsx
 src/components/Modal/ActiveCard/ActiveCardErrorWatch.jsx
+
+# Local env files
+.env
+.env.*
+!.env.example
